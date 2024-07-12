@@ -50,3 +50,11 @@ app.use(
 const indexRoutes = require("./function/index");
 const mypageRoutes = require("./function/mypage");
 const loginRoutes = require("./function/login");
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../Front-end/build", "index.html"));
+});
+
+app.listen(3000, () => {
+  console.log("서버가 3000 포트에서 실행 중입니다.");
+});
