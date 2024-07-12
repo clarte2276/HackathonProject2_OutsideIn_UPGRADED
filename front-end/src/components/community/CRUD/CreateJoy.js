@@ -31,13 +31,13 @@ function CreateJoy() {
       title,
       content: body,
       created_date: new Date().toISOString(),
-      viewCount: 0,
+      board_type: 'joy',
     };
 
     try {
-      await axios.post(`/community/joy/create`, newPost, { withCredentials: true });
+      await axios.post(`/joy/process/new_Post`, newPost, { withCredentials: true });
       alert('등록되었습니다.');
-      navigate('/joy/read/${nextNo}', { state: { newPost } });
+      navigate(`/joy/PostView/${nextNo}`, { state: { newPost } });
     } catch (error) {
       console.error('Error saving post:', error);
       alert('글을 저장하는 도중 오류가 발생했습니다.');
