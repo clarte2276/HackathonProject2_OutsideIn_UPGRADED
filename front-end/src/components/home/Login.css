@@ -22,7 +22,7 @@
 
 .loginBtn,
 .signupBtn,
-.logoutBtn {
+.mainlogoutBtn {
   position: relative;
   width: 150px;
   height: 32px;
@@ -34,7 +34,7 @@
 }
 
 .loginBtn,
-.logoutBtn {
+.mainlogoutBtn {
   border: 1px solid #d9d9d9;
   border-radius: 4px;
 }

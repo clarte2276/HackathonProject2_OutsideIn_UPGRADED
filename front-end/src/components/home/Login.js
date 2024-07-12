@@ -3,13 +3,9 @@ import './Login.css';
 import { Link, useNavigate } from 'react-router-dom';
 import loginUser from '../images/loginuser.png';
 import axios from 'axios';
-import sadnessImg from '../images/sadness.png';
-import anxietyImg from '../images/anxiety.png';
-import fearImg from '../images/fear.png';
 
 function Login() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [profileImage, setProfileImage] = useState(loginUser);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -22,29 +18,11 @@ function Login() {
       const response = await axios.get('/process/check-login', {
         withCredentials: true, // 쿠키를 서버로 전송
       });
-      const { loggedIn, userData } = response.data;
+      const { loggedIn } = response.data;
 
-      if (loggedIn) {
-        setIsLoggedIn(true);
-        setProfileImage(getProfileImage(userData.state)); // 상태에 따른 프로필 이미지 설정
-      } else {
-        setIsLoggedIn(false);
-      }
+      setIsLoggedIn(loggedIn);
     } catch (error) {
       console.error('로그인 상태 확인 중 오류 발생:', error);
-    }
-  };
-
-  const getProfileImage = (state) => {
-    switch (state) {
-      case '우울':
-        return sadnessImg;
-      case '불안':
-        return anxietyImg;
-      case '강박':
-        return fearImg;
-      default:
-        return loginUser;
     }
   };
 
@@ -55,7 +33,6 @@ function Login() {
       });
       if (response.status === 200) {
         setIsLoggedIn(false); // 로그아웃 처리 후 로그인 상태 변경
-        setProfileImage(loginUser); // 기본 로그인 사용자 이미지로 변경
         navigate('/');
       }
     } catch (error) {
@@ -65,11 +42,11 @@ function Login() {
 
   return (
     <div className="loginPosition">
+      <img className="loginUserImg" src={loginUser} alt=""></img>
       {isLoggedIn ? (
         <>
-          <img className="loginUserImg" src={profileImage} alt="프로필 이미지" />
           <p>환영합니다!</p>
-          <button className="logoutBtn" onClick={handleLogout}>
+          <button className="mainlogoutBtn" onClick={handleLogout}>
             로그아웃
           </button>
         </>
