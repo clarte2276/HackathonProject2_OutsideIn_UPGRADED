@@ -180,7 +180,7 @@ boards.forEach((board) => {
   });
 
   // 게시글 삭제
-  router.get("/delete/:no", (req, res) =>
+  router.get("/process/delete/:no", (req, res) =>
     deletePost(board, req.params.no, req, res, `/${board}`)
   );
 
