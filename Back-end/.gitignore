@@ -1,0 +1,2 @@
+# Ignore the db_config.json file in the config directory
+config/db_config.json
