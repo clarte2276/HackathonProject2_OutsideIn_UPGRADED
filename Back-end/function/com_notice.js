@@ -2,7 +2,6 @@ const express = require("express");
 const mysql = require("mysql");
 const db_config = require("../config/db_config.json");
 const moment = require("moment");
-const app = express();
 const router = express.Router();
 
 const pool = mysql.createPool(db_config);
@@ -227,6 +226,6 @@ router.post("/update/:no", checkAdmin, (req, res) => {
 });
 
 // /notice 일 때 router와 연동
-app.use("/notice", router);
+router.use("/notice", router);
 
 module.exports = router;

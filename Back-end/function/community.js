@@ -3,7 +3,6 @@ const express = require("express");
 const mysql = require("mysql");
 const db_config = require("../config/db_config.json");
 const moment = require("moment");
-const app = express();
 const router = express.Router();
 
 const pool = mysql.createPool({
@@ -216,5 +215,5 @@ boards.forEach((board) => {
   });
 });
 
-app.use("{board}", router);
+router.use("{board}", router);
 module.exports = router;
