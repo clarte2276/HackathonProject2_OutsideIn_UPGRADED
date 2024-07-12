@@ -8,32 +8,32 @@ function SelectButtonCommunity() {
   return (
     <div className="SelectButtonCommunity">
       <Link
-        to="/process/community/joy"
-        className={location.pathname === '/process/community/joy' ? 'active-button' : 'inactive-button'}
+        to="/community/joy"
+        className={location.pathname === '/community/joy' ? 'active-button' : 'inactive-button'}
       >
         기쁨이
       </Link>
       <Link
-        to="/process/community/sadness"
-        className={location.pathname === '/process/community/sadness' ? 'active-button' : 'inactive-button'}
+        to="/community/sadness"
+        className={location.pathname === '/community/sadness' ? 'active-button' : 'inactive-button'}
       >
         슬픔이
       </Link>
       <Link
-        to="/process/community/anxiety"
-        className={location.pathname === '/process/community/anxiety' ? 'active-button' : 'inactive-button'}
+        to="/community/anxiety"
+        className={location.pathname === '/community/anxiety' ? 'active-button' : 'inactive-button'}
       >
         불안이
       </Link>
       <Link
-        to="/process/community/fear"
-        className={location.pathname === '/process/community/fear' ? 'active-button' : 'inactive-button'}
+        to="/community/fear"
+        className={location.pathname === '/community/fear' ? 'active-button' : 'inactive-button'}
       >
         소심이
       </Link>
       <Link
-        to="/process/community/notice"
-        className={location.pathname === '/process/community/fear' ? 'active-button' : 'inactive-button'}
+        to="/community/notice"
+        className={location.pathname === '/community/fear' ? 'active-button' : 'inactive-button'}
       >
         공지사항
       </Link>

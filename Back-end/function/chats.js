@@ -1,7 +1,6 @@
 const express = require("express");
 const mysql = require("mysql");
 const db_config = require("../config/db_config.json");
-const app = express();
 const router = express.Router();
 
 const pool = mysql.createPool({
@@ -112,6 +111,6 @@ router.post("/chatrooms/to/:receiver_room", (req, res) => {
   );
 });
 
-app.use("/chat", router);
+router.use("/chat", router);
 
 module.exports = router;

@@ -10,6 +10,7 @@ import JoyCommunity from './components/community/JoyCommunity.js';
 import Loginpage from './components/mypage/Loginpage.js';
 import Signuppage from './components/mypage/Signuppage.js';
 import Footer from './components/Footer.js';
+import CreateJoy from './components/community/CRUD/CreateJoy.js';
 
 function App() {
   return (
@@ -21,9 +22,10 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/information" element={<Information />} />
             <Route path="/hospital" element={<Hospital />} />
-            <Route path="/process/community/joy" element={<JoyCommunity />} />
+            <Route path="/community/joy" element={<JoyCommunity />} />
             <Route path="/Loginpage" element={<Loginpage />} />
             <Route path="/Signuppage" element={<Signuppage />} />
+            <Route path="/community/joy/create" element={<CreateJoy />} />
           </Routes>
         </div>
         <Footer />

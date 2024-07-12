@@ -2,7 +2,6 @@
 const express = require("express");
 const mysql = require("mysql");
 const bcrypt = require("bcrypt");
-const app = express();
 const router = express.Router();
 
 router.get("/check-login", (req, res) => {
@@ -17,5 +16,5 @@ router.get("/check-login", (req, res) => {
 });
 
 //app과 router 연동
-app.use("/process", router);
+router.use("/process", router);
 module.exports = router;
