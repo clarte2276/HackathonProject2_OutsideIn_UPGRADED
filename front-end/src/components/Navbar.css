@@ -5,14 +5,14 @@
   width: 100%;
   display: flex;
   justify-content: center;
-  background-color: rgb(255, 254, 249);
-  padding-bottom: 10px;
+  position: relative;
+  z-index: 999;
 }
 
 .OutsideIn {
   width: 115px;
   letter-spacing: 1.6px;
-  margin-top: 20px;
+  margin-top: 30px;
 }
 
 .navbarMenu_logo {
@@ -28,7 +28,6 @@
 
 .navbar {
   width: 40%;
-  background-color: rgb(255, 254, 249);
   padding: 15px 0px;
   margin-top: 20px;
   margin-left: 280px;
@@ -67,8 +66,8 @@
 
 .navbarMenu {
   color: black;
-  padding-left: 100px;
-  padding-right: 100px;
+  padding-left: 50px;
+  padding-right: 50px;
   padding-top: 10px;
   height: 30px;
   font-family: 'IBM Plex Sans KR', sans-serif;
@@ -86,7 +85,7 @@
   content: '';
   display: block;
   position: absolute;
-  width: 48px;
+  width: 100%;
   border-bottom: 2.5px solid black;
   bottom: -2px;
   left: 50%;
