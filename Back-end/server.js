@@ -46,6 +46,10 @@ app.use(
   })
 );
 
+// 정적 파일 제공
+app.use(express.static(path.join(__dirname, "../Front-end/build")));
+app.use(express.static(path.join(__dirname, "public")));
+
 const indexRoutes = require("./function/index");
 const mypageRoutes = require("./function/mypage");
 const loginRoutes = require("./function/login");
