@@ -5,10 +5,7 @@ const path = require("path");
 const session = require("express-session");
 const MySQLStore = require("express-mysql-session")(session);
 const db_config = require("./config/db_config.json");
-
 const app = express();
-const http = require("http").createServer(app);
-const io = require("socket.io")(http);
 
 // MySQL 세션 스토어 옵션
 const sessionStoreOptions = {
