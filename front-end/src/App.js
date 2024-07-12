@@ -6,7 +6,7 @@ import Navbar from './components/Navbar.js';
 import Header from './components/home/Header.js';
 import Information from './components/information/Information.js';
 import Hospital from './components/hospital/Hospital.js';
-import CommunityJoy from './components/community/CommunityJoy.js';
+import JoyCommunity from './components/community/J';
 
 const Home = () => {
   return (
@@ -25,7 +25,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/information" element={<Information />} />
           <Route path="/hospital" element={<Hospital />} />
-          <Route path="/community" element={<CommunityJoy />} />
+          <Route path="/community" element={<JoyCommunity />} />
         </Routes>
       </div>
     </BrowserRouter>
