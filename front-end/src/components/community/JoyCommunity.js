@@ -56,33 +56,35 @@ const JoyCommunity = () => {
 
   return (
     <>
-      <div className="BoardTop_layout">
-        <TitleBodyCommunity title="기쁨이" body="본인의 챌린지 및 치료 후기를 적어주세요!" />
-        <div className="SelectButtonCommunity_layout">
-          <SelectButtonCommunity />
+      <div className="CommunityAll_layout">
+        <div className="CommunityTop_layout">
+          <TitleBodyCommunity title="기쁨이" body="본인의 챌린지 및 치료 후기를 적어주세요!" />
+          <div className="SelectButtonCommunity_layout">
+            <SelectButtonCommunity />
+          </div>
         </div>
-      </div>
-      <ListCommunity headersName={['제목', '작성자', '작성일', '좋아요']}>
-        {currentPosts.map((item, index) => (
-          <RowListCommunity key={index}>
-            <ColumnListCommunity>
-              <Link to={`/process/joy/PostView/${item.no}`} style={{ textDecoration: 'none' }}>
-                <div className="List_title">{item.title}</div>
-              </Link>
-            </ColumnListCommunity>
-            <ColumnListCommunity>{item.nickname}</ColumnListCommunity>
-            <ColumnListCommunity>{item.created_date}</ColumnListCommunity>
-            <ColumnListCommunity>{item.viewCount}</ColumnListCommunity>
-          </RowListCommunity>
-        ))}
-      </ListCommunity>
-      <CreateButtonCommunity emotion="joy" nextNo={getNextNo()} />
-      <div className="PaginationCustom">
-        <PaginationCustom
-          currentPage={currentPage}
-          totalPages={Math.ceil(dataList.length / postsPerPage)}
-          onPageChange={handlePageChange}
-        />
+        <ListCommunity headersName={['제목', '작성자', '작성일', '좋아요']}>
+          {currentPosts.map((item, index) => (
+            <RowListCommunity key={index}>
+              <ColumnListCommunity>
+                <Link to={`/process/joy/PostView/${item.no}`} style={{ textDecoration: 'none' }}>
+                  <div className="List_title">{item.title}</div>
+                </Link>
+              </ColumnListCommunity>
+              <ColumnListCommunity>{item.nickname}</ColumnListCommunity>
+              <ColumnListCommunity>{item.created_date}</ColumnListCommunity>
+              <ColumnListCommunity>{item.viewCount}</ColumnListCommunity>
+            </RowListCommunity>
+          ))}
+        </ListCommunity>
+        <CreateButtonCommunity emotion="joy" nextNo={getNextNo()} />
+        <div className="PaginationCustom">
+          <PaginationCustom
+            currentPage={currentPage}
+            totalPages={Math.ceil(dataList.length / postsPerPage)}
+            onPageChange={handlePageChange}
+          />
+        </div>
       </div>
     </>
   );
