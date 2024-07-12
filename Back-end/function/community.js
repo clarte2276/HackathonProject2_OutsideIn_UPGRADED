@@ -151,13 +151,13 @@ const updatePost = (title, content, date, res, redirectUrl) => {
 
 // 게시판 타입
 const boards = ["joy", "sadness", "fear", "anxiety"];
-
 boards.forEach((board) => {
   // 게시판 데이터 가져오기
   router.post(`/${board}`, (req, res) => getBoardData(board, res));
 
+  // 새 글 작성하는 링크는 localhost:3000/{보드이름}/new_Post 로 만들어주세요.
   // 새 글 작성
-  router.post(`/CommunityWrite/${board}`, (req, res) => {
+  router.post(`/process/new_Post`, (req, res) => {
     const { title, content } = req.body;
     const nickname = req.session.user.nickname;
     const createdDate = moment().format("YYYY-MM-DD HH:mm:ss");
@@ -179,12 +179,12 @@ boards.forEach((board) => {
   });
 
   // 게시글 삭제
-  router.get("/process/delete/:no", (req, res) =>
+  router.post("/Postview/:no/process/delete/", (req, res) =>
     deletePost(board, req.params.no, req, res, `/${board}`)
   );
 
   // 게시글 수정 폼
-  router.get("/update/:no", (req, res) => {
+  router.post("/Postview/:no/process/update/", (req, res) => {
     pool.query(
       `SELECT * FROM community WHERE no = ? AND board_type = ?`,
       [req.params.no, board],
@@ -209,7 +209,7 @@ boards.forEach((board) => {
   });
 
   // 게시글 수정
-  router.post("/process/update/:no", (req, res) => {
+  router.post("PostView/:no/process/update/", (req, res) => {
     const { title, content, created_date } = req.body;
     updatePost(title, content, created_date || new Date(), res, `/${board}`);
   });
