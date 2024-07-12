@@ -173,18 +173,17 @@ boards.forEach((board) => {
   });
 
   // 상세보기
-
   router.get("/PostView/:no", (req, res) => {
     getPostDetails(board, req.params.no, req, res);
   });
 
   // 게시글 삭제
-  router.post("/Postview/:no/process/delete/", (req, res) =>
+  router.post("/Postview/:no/process/delete", (req, res) =>
     deletePost(board, req.params.no, req, res, `/${board}`)
   );
 
   // 게시글 수정 폼
-  router.post("/Postview/:no/process/update/", (req, res) => {
+  router.post("/Postview/:no/process/update", (req, res) => {
     pool.query(
       `SELECT * FROM community WHERE no = ? AND board_type = ?`,
       [req.params.no, board],
@@ -209,11 +208,12 @@ boards.forEach((board) => {
   });
 
   // 게시글 수정
-  router.post("PostView/:no/process/update/", (req, res) => {
+  router.post("/PostView/:no/process/update/", (req, res) => {
     const { title, content, created_date } = req.body;
     updatePost(title, content, created_date || new Date(), res, `/${board}`);
   });
+
+  router.use("{board}", router);
 });
 
-router.use("{board}", router);
 module.exports = router;
