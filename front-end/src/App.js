@@ -25,7 +25,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/information" element={<Information />} />
           <Route path="/hospital" element={<Hospital />} />
-          <Route path="/community" element={<JoyCommunity />} />
+          <Route path="/process/community/joy" element={<JoyCommunity />} />
         </Routes>
       </div>
     </BrowserRouter>

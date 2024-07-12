@@ -50,7 +50,10 @@ function Navbar() {
         <Link className={`navbarMenu ${location.pathname === '/hospital' ? 'underline' : ''}`} to="/hospital">
           Hospital
         </Link>
-        <Link className={`navbarMenu ${location.pathname === '/community' ? 'underline' : ''}`} to="/community">
+        <Link
+          className={`navbarMenu ${location.pathname === '/process/community/joy' ? 'underline' : ''}`}
+          to="/process/community/joy"
+        >
           Community
         </Link>
         <form onSubmit={checkLogin} className={`navbarMenu ${location.pathname === '/MyPage' ? 'underline' : ''}`}>
