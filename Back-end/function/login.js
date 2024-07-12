@@ -3,6 +3,7 @@ const express = require("express");
 const bcrypt = require("bcrypt");
 const app = express();
 const router = express.Router();
+const db_config = require("../config/db_config.json");
 
 // /login에 접속했을 때 다음과 같은 일을 하세요
 app.get("/login", (req, res) => {

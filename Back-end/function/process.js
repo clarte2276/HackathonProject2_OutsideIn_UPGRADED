@@ -2,7 +2,7 @@
 const express = require("express");
 const mysql = require("mysql");
 const bcrypt = require("bcrypt");
-const db_config = require("./config/db_config.json");
+const db_config = require("../config/db_config.json");
 const app = express();
 const router = express.Router();
 
