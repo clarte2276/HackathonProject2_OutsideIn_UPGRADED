@@ -22,8 +22,6 @@ router.get("/", (req, res) => {
   }
 
   const currentUserNickname = req.session.user.nickname;
-  const sender_room = req.session.user.roomid;
-
   pool.query(
     "SELECT roomId, nickname, state FROM users WHERE nickname != ?",
     [currentUserNickname],

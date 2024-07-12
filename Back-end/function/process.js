@@ -5,10 +5,6 @@ const bcrypt = require("bcrypt");
 const app = express();
 const router = express.Router();
 
-router.get("/~~", (req, res) => {
-  console.log("Here is process/~~~ page");
-});
-
 router.get("/check-login", (req, res) => {
   console.log("/check-login 호출됨"); // 디버깅용 로그asdas
   if (req.session.user) {
