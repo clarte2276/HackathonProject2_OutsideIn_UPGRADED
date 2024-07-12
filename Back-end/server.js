@@ -48,11 +48,9 @@ app.use(express.static(path.join(__dirname, "../Front-end/build")));
 app.use(express.static(path.join(__dirname, "public")));
 
 //js파일 연동
-const indexRoutes = require("./function/index");
 const mypageRoutes = require("./function/mypage");
 const loginRoutes = require("./function/login");
 const processRoutes = require("./function/process");
-app.use("/", indexRoutes);
 app.use("/", mypageRoutes);
 app.use("/", loginRoutes);
 app.use("/", processRoutes);
