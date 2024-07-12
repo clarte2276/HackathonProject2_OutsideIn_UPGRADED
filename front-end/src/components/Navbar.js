@@ -53,7 +53,7 @@ function Navbar() {
           className={`navbarMenu ${
             location.pathname === "/information" ? "underline" : ""
           }`}
-          href="/information"
+          to="/information"
         >
           Information
         </Link>
