@@ -1,11 +1,10 @@
 import React from 'react';
 import './Header.css';
-import HeaderImg from '../images/header.png';
 
 function Header(props) {
   return (
     <div className="header">
-      <header>
+      <div className="headerTxt">
         <h1>
           <div className="line1">
             <p>{props.title1}</p>
@@ -15,10 +14,7 @@ function Header(props) {
             <p>{props.title3}</p>
           </div>
         </h1>
-        <div className="headerImg">
-          <img src={HeaderImg} alt=""></img>
-        </div>
-      </header>
+      </div>
     </div>
   );
 }
