@@ -1,4 +1,4 @@
-//server.js
+// server.js
 const express = require("express");
 const mysql = require("mysql");
 const path = require("path");
@@ -6,6 +6,7 @@ const session = require("express-session");
 const MySQLStore = require("express-mysql-session")(session);
 const db_config = require("./config/db_config.json");
 const app = express();
+const cors = require("cors");
 
 // MySQL 세션 스토어 옵션
 const sessionStoreOptions = {
@@ -31,7 +32,7 @@ const pool = mysql.createPool({
 // URL을 인코딩하는 코드
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-
+app.use(cors());
 app.use(
   session({
     key: "session_cookie_name",
@@ -54,12 +55,15 @@ const processRoutes = require("./function/process");
 const communityRoutes = require("./function/community");
 const chatsRoutes = require("./function/chats");
 const commentsRoutes = require("./function/comments");
+const kakaoRoutes = require("./function/kakao_login");
+
 app.use("/", mypageRoutes);
 app.use("/", loginRoutes);
 app.use("/", processRoutes);
 app.use("/", communityRoutes);
 app.use("/", chatsRoutes);
 app.use("/", commentsRoutes);
+app.use("/", kakaoRoutes);
 
 //모든 요청은 build/index.html로
 app.get("*", (req, res) => {
