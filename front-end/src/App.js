@@ -6,7 +6,7 @@ import Navbar from './components/Navbar.js';
 import Header from './components/home/Header.js';
 import Information from './components/information/Information.js';
 import Hospital from './components/hospital/Hospital.js';
-import JoyCommunity from './components/community/J';
+import JoyCommunity from './components/community/JoyCommunity.js';
 
 const Home = () => {
   return (
