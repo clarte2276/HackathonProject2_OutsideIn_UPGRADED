@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const useUserData = (initialData = {}) => {
@@ -13,18 +13,18 @@ const useUserData = (initialData = {}) => {
 
   const fetchUserData = async () => {
     try {
-      // 입력 정보 전달 경로
-      const response = await axios.get('/loginpage/process/signup');
+      // 사용자가 로그인한 후 호출 (유저정보 가져오기)
+      const response = await axios.get('/loginpage/process/login');
       const userData = response.data;
 
-      setFirstName(userData.Firstname);
-      setLastName(userData.Lastname);
-      setUsernickname(userData.nickname);
-      setBirthdate(userData.birth);
-      setGender(userData.gender);
-      setUserId(userData.id); // 아이디 값 변경 불가
-      setPassword(userData.password);
-      setState(userData.state);
+      setFirstName(userData.Lastname || '');
+      setLastName(userData.Firstname || '');
+      setUsernickname(userData.nickname || '');
+      setBirthdate(userData.birth || '');
+      setGender(userData.gender || '');
+      setUserId(userData.id || ''); // 아이디 값 변경 불가
+      setPassword(userData.password || '');
+      setState(userData.state || '');
     } catch (error) {
       console.error('사용자 데이터를 가져오는 중 오류 발생:', error);
     }
@@ -39,12 +39,13 @@ const useUserData = (initialData = {}) => {
   const handleSave = async () => {
     try {
       const updateData = {
-        firstName,
         lastName,
-        nickname: usernickname,
-        password,
-        birth: birthdate,
+        firstName,
         gender,
+        birth: birthdate,
+        usernickname,
+        id: userId,
+        password,
         state,
       };
 

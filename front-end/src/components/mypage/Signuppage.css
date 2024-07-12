@@ -87,12 +87,3 @@
   margin-top: 1%;
   margin-left: 1%;
 }
-
-.loginLink {
-  color: inherit;
-  text-decoration: none;
-}
-
-.loginLink:hover {
-  text-decoration: underline;
-}

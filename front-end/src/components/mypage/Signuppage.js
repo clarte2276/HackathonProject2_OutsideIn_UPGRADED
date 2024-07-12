@@ -1,7 +1,8 @@
 import React from 'react';
 import './Signuppage.css';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Select from 'react-select';
+import axios from 'axios';
 import useUserData from '../useUserData';
 
 function Signuppage() {
@@ -23,6 +24,7 @@ function Signuppage() {
     setUserId,
     setPassword,
     setState,
+    handleSave,
   } = useUserData();
 
   const handleGenderChange = (selectedOption) => {
@@ -42,24 +44,19 @@ function Signuppage() {
         usernickname,
         birth: birthdate,
         gender,
-        userId,
+        username: userId,
         password,
         state,
       };
 
       try {
-        // 회원가입 시 이용 경로
-        const response = await fetch('/loginpage/signup', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(signupData),
-        });
-        const result = await response.json();
+        // 회원가입 시 입력한 정보 전달 경로
+        const response = await axios.post('/loginpage/process/signup', signupData);
+        const result = response.data;
 
         if (result.success) {
-          navigate('/Loginpage');
+          alert('회원가입 성공!');
+          navigate('/loginpage');
         } else {
           alert(result.message);
         }
@@ -157,7 +154,7 @@ function Signuppage() {
           />
           <input type="text" placeholder="아이디" value={userId} onChange={(e) => setUserId(e.target.value)} required />
           <input
-            type="text"
+            type="password"
             placeholder="비밀번호"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -175,9 +172,7 @@ function Signuppage() {
           />
         </div>
         <button type="submit" className="SignupBtn">
-          <Link to="/loginpage" className="loginLink">
-            회원가입
-          </Link>
+          회원가입
         </button>
       </form>
     </div>
