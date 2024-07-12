@@ -1,6 +1,6 @@
 import React from 'react';
 
-function Community() {
+function CommunityJoy() {
   return (
     <div>
       <h1>Community page</h1>
@@ -8,4 +8,4 @@ function Community() {
   );
 }
 
-export default Community;
+export default CommunityJoy;
