@@ -15,6 +15,18 @@ router.get("/check-login", (req, res) => {
   }
 });
 
+// 로그아웃 구현
+router.post("/logout", (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      console.log("세션 종료 중 오류 발생:", err);
+      return res.status(500).send("로그아웃 중 오류가 발생했습니다.");
+    }
+    res.clearCookie("session_cookie_name");
+    return res.status(200).send();
+  });
+});
+
 //app과 router 연동
 router.use("/process", router);
 module.exports = router;

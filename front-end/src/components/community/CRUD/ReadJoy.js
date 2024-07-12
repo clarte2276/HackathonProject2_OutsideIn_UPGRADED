@@ -1,29 +1,52 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
+import CRUDHeader from './CRUDHeader';
 import './CRUD.css';
 import axios from 'axios';
 
 function ReadJoy() {
   const { no } = useParams();
+  const navigate = useNavigate();
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     // 백엔드에서 게시글 목록을 가져옴
-    axios
-      .get(`/joy/read/${no}`) // 추출한 매개변수를 사용하여 요청 URL 구성
-      .then((response) => {
-        console.log('응답 데이터:', response.data); // 응답 데이터 출력
-        setPost(response.data); // 데이터를 상태에 설정
+    const fetchPost = async () => {
+      try {
+        const response = await axios.get(`/joy/PostView/:no`);
+        console.log('응답 데이터:', response.data);
+        setPost(response.data);
         setLoading(false);
-      })
-      .catch((error) => {
-        console.error('There was an error fetching the post!', error);
-        setError('There was an error fetching the post!');
+      } catch (error) {
+        console.error('게시글을 불러오는 중 오류 발생:', error);
+        setError('게시글을 불러오는 중 오류 발생');
         setLoading(false);
-      });
+      }
+    };
+
+    fetchPost();
   }, [no]);
+
+  const handleDelete = async () => {
+    const confirmDelete = window.confirm('정말로 삭제하시겠습니까?');
+
+    if (confirmDelete) {
+      try {
+        await axios.delete(`/joy/Postview/${no}/process/delete`);
+        alert('게시글이 삭제되었습니다.');
+        navigate('/joy');
+      } catch (error) {
+        if (error.response && error.response.status === 403) {
+          alert('삭제 권한이 없습니다.');
+        } else {
+          console.error('게시글 삭제 중 오류 발생:', error);
+          alert('게시글 삭제 중 오류가 발생했습니다.');
+        }
+      }
+    }
+  };
 
   if (loading) {
     return <div>로딩 중...</div>;
@@ -43,15 +66,17 @@ function ReadJoy() {
     <div className="post-container">
       <CRUDHeader title="기쁨이 게시판" />
       <div>{title}</div>
-      <div>
-        <div>
+      <div className="infoUpdateDelete">
+        <div className="info">
           <div>프사</div>
           <div>{nickname}</div>
           <div>{created_date}</div>
         </div>
-        <div>
-          <div>수정</div>
-          <div>삭제</div>
+        <div className="updateDelete">
+          <Link to={`/joy/Postview/${no}/process/update`}>수정</Link>
+          <div onClick={handleDelete} style={{ cursor: 'pointer' }}>
+            삭제
+          </div>
         </div>
       </div>
       <div>

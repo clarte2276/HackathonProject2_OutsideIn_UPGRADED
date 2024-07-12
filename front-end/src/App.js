@@ -12,6 +12,8 @@ import Signuppage from './components/mypage/Signuppage.js';
 import Mypage from './components/mypage/Mypage.js';
 import Footer from './components/Footer.js';
 import CreateJoy from './components/community/CRUD/CreateJoy.js';
+import ReadJoy from './components/community/CRUD/ReadJoy.js';
+import UpdateJoy from './components/community/CRUD/UpdateJoy.js';
 
 function App() {
   return (
@@ -23,11 +25,13 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/information" element={<Information />} />
             <Route path="/hospital" element={<Hospital />} />
-            <Route path="/community/joy" element={<JoyCommunity />} />
+            <Route path="/joy" element={<JoyCommunity />} />
             <Route path="/Loginpage" element={<Loginpage />} />
             <Route path="/Signuppage" element={<Signuppage />} />
             <Route path="/Mypage" element={<Mypage />} />
-            <Route path="/community/joy/create" element={<CreateJoy />} />
+            <Route path="/joy/process/new_Post" element={<CreateJoy />} />
+            <Route path="/joy/PostView/:no" element={<ReadJoy />} />
+            <Route path="/joy/Postview/:no/process/update" element={<UpdateJoy />} />
           </Routes>
         </div>
         <Footer />

@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 function CreateButtonCommunity({ emotion, nextNo }) {
   return (
     <div className="CreateButton">
-      <Link className="CreateButtonCommunity" to={`/community/${emotion}/create`} state={{ nextNo }}>
+      <Link className="CreateButtonCommunity" to={`/${emotion}/process/new_Post`} state={{ nextNo }}>
         새 글 작성
       </Link>
     </div>

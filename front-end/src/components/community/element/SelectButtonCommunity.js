@@ -7,10 +7,7 @@ function SelectButtonCommunity() {
 
   return (
     <div className="SelectButtonCommunity">
-      <Link
-        to="/community/joy"
-        className={location.pathname === '/community/joy' ? 'active-button' : 'inactive-button'}
-      >
+      <Link to="/community/joy" className={location.pathname === '/joy' ? 'active-button' : 'inactive-button'}>
         기쁨이
       </Link>
       <Link
