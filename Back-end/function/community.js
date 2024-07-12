@@ -3,6 +3,7 @@ const express = require("express");
 const mysql = require("mysql");
 const db_config = require("../config/db_config.json");
 const moment = require("moment");
+const app = express();
 const router = express.Router();
 
 const pool = mysql.createPool({
@@ -15,15 +16,6 @@ const pool = mysql.createPool({
   debug: false,
 });
 
-// 관리자 계정 확인 미들웨어
-const checkAdmin = (req, res, next) => {
-  if (req.session && req.session.user && req.session.user.isAdmin) {
-    next();
-  } else {
-    res.status(403).send('관리자 권한이 필요합니다.');
-  }
-};
-
 // 게시판 데이터
 const getBoardData = (boardType, res) => {
   pool.query(
@@ -32,7 +24,7 @@ const getBoardData = (boardType, res) => {
     (error, results) => {
       if (error) {
         console.error(error);
-        res.status(500).send('서버 오류');
+        res.status(500).send("서버 오류");
       } else {
         res.json(results);
       }
@@ -40,11 +32,19 @@ const getBoardData = (boardType, res) => {
   );
 };
 
-const insertBoardData = (boardType, title, nickname, content, createdDate, res, redirectUrl) => {
+const insertBoardData = (
+  boardType,
+  title,
+  nickname,
+  content,
+  createdDate,
+  res,
+  redirectUrl
+) => {
   pool.getConnection((err, conn) => {
     if (err) {
-      console.log('MySQL Connection Error', err);
-      res.status(500).send('DB 서버 연결 실패');
+      console.log("MySQL Connection Error", err);
+      res.status(500).send("DB 서버 연결 실패");
       return;
     }
 
@@ -54,8 +54,8 @@ const insertBoardData = (boardType, title, nickname, content, createdDate, res, 
       (err, result) => {
         conn.release();
         if (err) {
-          console.log('SQL 실행 시 오류 발생', err);
-          res.status(500).send('Query 실패');
+          console.log("SQL 실행 시 오류 발생", err);
+          res.status(500).send("Query 실패");
           return;
         }
         res.redirect(redirectUrl);
@@ -67,17 +67,17 @@ const insertBoardData = (boardType, title, nickname, content, createdDate, res, 
 const getPostDetails = (boardType, postId, req, res) => {
   pool.getConnection((err, conn) => {
     if (err) {
-      console.error('MySQL 연결 오류:', err);
-      res.status(500).send('서버 오류');
+      console.error("MySQL 연결 오류:", err);
+      res.status(500).send("서버 오류");
       return;
     }
 
     const postQuery = `SELECT * FROM community WHERE no = ? AND board_type = ?`;
     conn.query(postQuery, [postId, boardType], (err, postResult) => {
       if (err) {
-        console.error('게시글 조회 오류:', err);
+        console.error("게시글 조회 오류:", err);
         conn.release();
-        res.status(500).send('서버 오류');
+        res.status(500).send("서버 오류");
         return;
       }
 
@@ -85,8 +85,8 @@ const getPostDetails = (boardType, postId, req, res) => {
       conn.query(commentQuery, [postId, boardType], (err, commentResult) => {
         conn.release();
         if (err) {
-          console.error('댓글 조회 오류:', err);
-          res.status(500).send('서버 오류');
+          console.error("댓글 조회 오류:", err);
+          res.status(500).send("서버 오류");
           return;
         }
         res.json({
@@ -105,42 +105,45 @@ const deletePost = (boardType, postId, req, res, redirectUrl) => {
     [postId, boardType],
     (error, results) => {
       if (error) {
-        console.error('쿼리 실행 중 오류 발생: ', error);
-        res.status(500).send('내부 서버 오류');
+        console.error("쿼리 실행 중 오류 발생: ", error);
+        res.status(500).send("내부 서버 오류");
         return;
       }
 
-      if (results.length > 0 && results[0].nickname === req.session.user.nickname) {
+      if (
+        results.length > 0 &&
+        results[0].nickname === req.session.user.nickname
+      ) {
         pool.query(
           `DELETE FROM community WHERE no = ? AND board_type = ?`,
           [postId, boardType],
           (error) => {
             if (error) {
-              console.error('쿼리 실행 중 오류 발생: ', error);
-              res.status(500).send('내부 서버 오류');
+              console.error("쿼리 실행 중 오류 발생: ", error);
+              res.status(500).send("내부 서버 오류");
             } else {
-              console.log('게시물 삭제 완료');
+              console.log("게시물 삭제 완료");
               res.redirect(redirectUrl);
             }
           }
         );
       } else {
-        res.status(403).send('삭제 권한이 없습니다.');
+        res.status(403).send("삭제 권한이 없습니다.");
       }
     }
   );
 };
 
-const updatePost = (boardType, postId, title, content, date, res, redirectUrl) => {
+const updatePost = (title, content, date, res, redirectUrl) => {
   pool.query(
     `UPDATE community SET title = ?, content = ?, created_date = ? WHERE no = ? AND board_type = ?`,
     [title, content, date, postId, boardType],
     (error) => {
       if (error) {
-        console.error('쿼리 실행 중 오류 발생: ', error);
-        res.status(500).send('내부 서버 오류');
+        console.error("쿼리 실행 중 오류 발생: ", error);
+        res.status(500).send("내부 서버 오류");
       } else {
-        console.log('게시물 수정 완료');
+        console.log("게시물 수정 완료");
         res.redirect(redirectUrl);
       }
     }
@@ -148,9 +151,9 @@ const updatePost = (boardType, postId, title, content, date, res, redirectUrl) =
 };
 
 // 게시판 타입
-const boards = ['joy', 'sadness', 'fear', 'anxiety'];
+const boards = ["joy", "sadness", "fear", "anxiety"];
 
-boards.forEach(board => {
+boards.forEach((board) => {
   // 게시판 데이터 가져오기
   router.post(`/${board}`, (req, res) => getBoardData(board, res));
 
@@ -158,37 +161,48 @@ boards.forEach(board => {
   router.post(`/CommunityWrite/${board}`, (req, res) => {
     const { title, content } = req.body;
     const nickname = req.session.user.nickname;
-    const createdDate = moment().format('YYYY-MM-DD HH:mm:ss');
-    insertBoardData(board, title, nickname, content, createdDate, res, `/${board}`);
+    const createdDate = moment().format("YYYY-MM-DD HH:mm:ss");
+    insertBoardData(
+      board,
+      title,
+      nickname,
+      content,
+      createdDate,
+      res,
+      `/${board}`
+    );
   });
 
   // 상세보기
-  router.get(`/${board}/PostView/:no`, (req, res) => {
+
+  router.get("/PostView/:no", (req, res) => {
     getPostDetails(board, req.params.no, req, res);
   });
 
   // 게시글 삭제
-  router.get(`/${board}/delete/:no`, (req, res) => deletePost(board, req.params.no, req, res, `/${board}`));
+  router.get("/process/delete/:no", (req, res) =>
+    deletePost(board, req.params.no, req, res, `/${board}`)
+  );
 
   // 게시글 수정 폼
-  router.get(`/${board}/update/:no`, (req, res) => {
+  router.get("/update/:no", (req, res) => {
     pool.query(
       `SELECT * FROM community WHERE no = ? AND board_type = ?`,
       [req.params.no, board],
       (error, results) => {
         if (error) {
-          console.error('쿼리 실행 중 오류 발생: ', error);
-          res.status(500).send('내부 서버 오류');
+          console.error("쿼리 실행 중 오류 발생: ", error);
+          res.status(500).send("내부 서버 오류");
         } else {
           if (results.length > 0) {
             const post = results[0];
             if (post.nickname === req.session.user.nickname) {
               res.render(`${board}/update`, { post });
             } else {
-              res.status(403).send('수정 권한이 없습니다.');
+              res.status(403).send("수정 권한이 없습니다.");
             }
           } else {
-            res.status(404).send('게시물을 찾을 수 없습니다.');
+            res.status(404).send("게시물을 찾을 수 없습니다.");
           }
         }
       }
@@ -196,50 +210,11 @@ boards.forEach(board => {
   });
 
   // 게시글 수정
-  router.post(`/${board}/update/:no`, (req, res) => {
+  router.post("/process/update/:no", (req, res) => {
     const { title, content, created_date } = req.body;
-    updatePost(board, req.params.no, title, content, created_date || new Date(), res, `/${board}`);
+    updatePost(title, content, created_date || new Date(), res, `/${board}`);
   });
 });
 
-// 노티스 게시판 관리자만 접근
-router.post('/notice', checkAdmin, (req, res) => getBoardData('notice', res));
-router.post('/CommunityWrite/notice', checkAdmin, (req, res) => {
-  const { title, content } = req.body;
-  const nickname = req.session.user.nickname;
-  const createdDate = moment().format('YYYY-MM-DD HH:mm:ss');
-  insertBoardData('notice', title, nickname, content, createdDate, res, '/notice');
-});
-router.get('/notice/PostView/:no', checkAdmin, (req, res) => {
-  getPostDetails('notice', req.params.no, req, res);
-});
-router.get('/notice/delete/:no', checkAdmin, (req, res) => deletePost('notice', req.params.no, req, res, '/notice'));
-router.get('/notice/update/:no', checkAdmin, (req, res) => {
-  pool.query(
-    'SELECT * FROM community WHERE no = ? AND board_type = ?',
-    [req.params.no, 'notice'],
-    (error, results) => {
-      if (error) {
-        console.error('쿼리 실행 중 오류 발생: ', error);
-        res.status(500).send('내부 서버 오류');
-      } else {
-        if (results.length > 0) {
-          const post = results[0];
-          if (post.nickname === req.session.user.nickname) {
-            res.render('notice/update', { post });
-          } else {
-            res.status(403).send('수정 권한이 없습니다.');
-          }
-        } else {
-          res.status(404).send('게시물을 찾을 수 없습니다.');
-        }
-      }
-    }
-  );
-});
-router.post('/notice/update/:no', checkAdmin, (req, res) => {
-  const { title, content, created_date } = req.body;
-  updatePost('notice', req.params.no, title, content, created_date || new Date(), res, '/notice');
-});
-
+app.use("{board}", router);
 module.exports = router;
