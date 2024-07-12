@@ -134,15 +134,7 @@ const deletePost = (boardType, postId, req, res, redirectUrl) => {
   );
 };
 
-const updatePost = (
-  boardType,
-  postId,
-  title,
-  content,
-  date,
-  res,
-  redirectUrl
-) => {
+const updatePost = (title, content, date, res, redirectUrl) => {
   pool.query(
     `UPDATE community SET title = ?, content = ?, created_date = ? WHERE no = ? AND board_type = ?`,
     [title, content, date, postId, boardType],
@@ -218,17 +210,9 @@ boards.forEach((board) => {
   });
 
   // 게시글 수정
-  router.post("/update/:no", (req, res) => {
+  router.post("/process/update/:no", (req, res) => {
     const { title, content, created_date } = req.body;
-    updatePost(
-      board,
-      req.params.no,
-      title,
-      content,
-      created_date || new Date(),
-      res,
-      `/${board}`
-    );
+    updatePost(title, content, created_date || new Date(), res, `/${board}`);
   });
 });
 
