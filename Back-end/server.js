@@ -53,6 +53,7 @@ app.use(express.static(path.join(__dirname, "public")));
 const indexRoutes = require("./function/index");
 const mypageRoutes = require("./function/mypage");
 const loginRoutes = require("./function/login");
+const processRoutes = require("./function/process");
 
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "../Front-end/build", "index.html"));
