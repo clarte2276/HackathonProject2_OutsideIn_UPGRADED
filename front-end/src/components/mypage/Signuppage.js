@@ -11,7 +11,7 @@ function Signuppage() {
     firstName,
     lastName,
     gender,
-    birthdate,
+    birth,
     usernickname,
     userId,
     password,
@@ -19,7 +19,7 @@ function Signuppage() {
     setFirstName,
     setLastName,
     setGender,
-    setBirthdate,
+    setBirth,
     setUsernickname,
     setUserId,
     setPassword,
@@ -37,12 +37,12 @@ function Signuppage() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if (lastName && firstName && usernickname && birthdate && gender && userId && password && state) {
+    if (lastName && firstName && usernickname && birth && gender && userId && password && state) {
       const signupData = {
         lastName,
         firstName,
         usernickname,
-        birth: birthdate,
+        birth,
         gender,
         username: userId,
         password,
@@ -136,13 +136,7 @@ function Signuppage() {
             onChange={(e) => setUsernickname(e.target.value)}
             required
           />
-          <input
-            type="text"
-            placeholder="생년월일"
-            value={birthdate}
-            onChange={(e) => setBirthdate(e.target.value)}
-            required
-          />
+          <input type="text" placeholder="생년월일" value={birth} onChange={(e) => setbirth(e.target.value)} required />
           <Select
             className="genderLabel"
             options={genderOptions}
