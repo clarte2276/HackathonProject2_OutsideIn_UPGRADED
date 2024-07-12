@@ -4,7 +4,6 @@ const mysql = require("mysql");
 const path = require("path");
 const session = require("express-session");
 const MySQLStore = require("express-mysql-session")(session);
-const bcrypt = require("bcrypt");
 const db_config = require("./config/db_config.json");
 
 const app = express();
