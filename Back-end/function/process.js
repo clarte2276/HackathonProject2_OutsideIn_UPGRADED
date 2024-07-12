@@ -5,12 +5,6 @@ const bcrypt = require("bcrypt");
 const app = express();
 const router = express.Router();
 
-// /index 접속했을 때 다음과 같은 일을 하세요
-app.get("/process", (req, res) => {
-  console.log("Here is process page");
-});
-
-// /login/~~ 에 접속했을 때 다음과 같은 일을 하세요
 router.get("/~~", (req, res) => {
   console.log("Here is process/~~~ page");
 });
