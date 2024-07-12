@@ -122,7 +122,7 @@ const getComments = (boardType, boardNo, res) => {
     );
   };
   
-// 게시판 타입
+// 댓글 작성 게시판 타입
 const boards = ["joy", "sadness", "fear", "anxiety"];
 
 boards.forEach((board) => {
