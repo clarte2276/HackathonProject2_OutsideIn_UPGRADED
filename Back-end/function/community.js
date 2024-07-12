@@ -15,200 +15,212 @@ const pool = mysql.createPool({
   debug: false,
 });
 
-// joy
-// 게시글 목록 조회
-router.post("/joy", (req, res) => {
-  pool.query(
-    "SELECT no, title, nickname, content, created_date FROM communityjoy",
-    (error, results) => {
+// Middleware to check if the user is an admin
+const checkAdmin = (req, res, next) => {
+    if (req.session.user && req.session.user.isAdmin) {
+      next();
+    } else {
+      res.status(403).send('관리자 권한이 필요합니다.');
+    }
+  };
+  
+  // Helper functions
+  const getBoardData = (boardType, res) => {
+    pool.query(`SELECT no, title, nickname, content, created_date FROM community WHERE board_type = ?`, [boardType], (error, results) => {
       if (error) {
         console.error(error);
-        res.status(500).send("서버 오류");
+        res.status(500).send('서버 오류');
       } else {
-        res.json(results); // JSON 형식으로 응답
+        res.json(results);
       }
-    }
-  );
-});
-
-// 새로운 게시글 추가
-router.post("/CommunityWrite/joy", async (req, res) => {
-  const paramTitle = req.body.title;
-  const paramNickname = req.session.user.nickname; // 세션에서 닉네임 가져오기
-  const paramContent = req.body.content;
-  const createdDate = moment().format("YYYY-MM-DD HH"); // 현재 시간
-
-  try {
+    });
+  };
+  
+  const insertBoardData = (boardType, title, nickname, content, createdDate, res, redirectUrl) => {
     pool.getConnection((err, conn) => {
       if (err) {
-        console.log("MySQL Connection Error", err);
-        if (conn) conn.release();
-        res.writeHead("200", { "Content-Type": "text/html; charset=utf8" });
-        res.write("<h2>DB 서버 연결 실패</h2>");
-        res.end();
+        console.log('MySQL Connection Error', err);
+        res.status(500).send('DB 서버 연결 실패');
         return;
       }
-      console.log("데이터베이스 연결 성공");
-
+      console.log('데이터베이스 연결 성공');
+  
       const exec = conn.query(
-        "INSERT INTO board (title, nickname, content, created_date) VALUES (?, ?, ?, ?)",
-        [paramTitle, paramNickname, paramContent, createdDate, viewCount],
+        `INSERT INTO community (board_type, title, nickname, content, created_date) VALUES (?, ?, ?, ?, ?)`,
+        [boardType, title, nickname, content, createdDate],
         (err, result) => {
           conn.release();
-          console.log("실행된 SQL: " + exec.sql);
-
           if (err) {
-            console.log("SQL 실행 시 오류 발생", err);
-            res.writeHead("200", { "Content-Type": "text/html; charset=utf8" });
-            res.write("<h2>Query 실패</h2>");
-            res.end();
+            console.log('SQL 실행 시 오류 발생', err);
+            res.status(500).send('Query 실패');
             return;
           }
-
-          if (result) {
-            console.dir(result);
-            console.log("insert 성공");
-            res.redirect("/joy"); // 목록 페이지로 리디렉트
-          } else {
-            console.log("insert 실패");
-            res.writeHead("200", { "Content-Type": "text/html; charset=utf8" });
-            res.write("<h2>게시글 추가 실패</h2>");
-            res.end();
-          }
+          res.redirect(redirectUrl);
         }
       );
     });
-  } catch (error) {
-    console.log("게시글 저장 오류", error);
-    res.writeHead("200", { "Content-Type": "text/html; charset=utf8" });
-    res.write("<h2>게시글 저장 실패</h2>");
-    res.end();
-  }
-});
-
-// 게시글 상세 페이지 및 댓글 조회
-router.get("/joy/PostView/:no", (req, res) => {
-  const postId = req.params.no;
-
-  pool.getConnection((err, conn) => {
-    if (err) {
-      console.error("MySQL 연결 오류:", err);
-      res.status(500).send("서버 오류");
-      return;
-    }
-
-    // 게시글 조회
-    const postQuery = "SELECT * FROM communityjoy WHERE no = ?";
-    conn.query(postQuery, [postId], (err, postResult) => {
+  };
+  
+  const getPostDetails = (boardType, postId, req, res) => {
+    pool.getConnection((err, conn) => {
       if (err) {
-        console.error("게시글 조회 오류:", err);
-        conn.release();
-        res.status(500).send("서버 오류");
+        console.error('MySQL 연결 오류:', err);
+        res.status(500).send('서버 오류');
         return;
       }
-      // 댓글 조회
-      const commentQuery = "SELECT * FROM comment WHERE board_no = ?";
-      conn.query(commentQuery, [postId], (err, commentResult) => {
-        conn.release();
+  
+      const postQuery = `SELECT * FROM community WHERE no = ? AND board_type = ?`;
+      conn.query(postQuery, [postId, boardType], (err, postResult) => {
         if (err) {
-          console.error("댓글 조회 오류:", err);
-          res.status(500).send("서버 오류");
+          console.error('게시글 조회 오류:', err);
+          conn.release();
+          res.status(500).send('서버 오류');
           return;
         }
-        res.json({
-          post: postResult[0],
-          comments: commentResult, // comments 배열을 전달
-          session: req.session, // 세션 전달
+  
+        const commentQuery = `SELECT * FROM comments WHERE board_no = ? AND board_type = ?`;
+        conn.query(commentQuery, [postId, boardType], (err, commentResult) => {
+          conn.release();
+          if (err) {
+            console.error('댓글 조회 오류:', err);
+            res.status(500).send('서버 오류');
+            return;
+          }
+          res.json({
+            post: postResult[0],
+            comments: commentResult,
+            session: req.session,
+          });
         });
-        // res.render('view_post', {
-        //   post: postResult[0],
-        //   comments: commentResult, // comments 배열을 전달
-        //   session: req.session, // 세션 전달
-        // });
       });
     });
-  });
-});
-
-// 게시물 삭제
-router.get("/joy/delete/:no", (req, res) => {
-  const paramsNo = req.params.no;
-
-  pool.query(
-    "SELECT nickname FROM communityjoy WHERE no = ?",
-    [paramsNo],
-    (error, results) => {
+  };
+  
+  const deletePost = (boardType, postId, req, res, redirectUrl) => {
+    pool.query(`SELECT nickname FROM community WHERE no = ? AND board_type = ?`, [postId, boardType], (error, results) => {
       if (error) {
-        console.error("쿼리 실행 중 오류 발생: ", error);
-        res.status(500).send("내부 서버 오류");
+        console.error('쿼리 실행 중 오류 발생: ', error);
+        res.status(500).send('내부 서버 오류');
+        return;
+      }
+  
+      if (results.length > 0 && results[0].nickname === req.session.user.nickname) {
+        pool.query(`DELETE FROM community WHERE no = ? AND board_type = ?`, [postId, boardType], (error) => {
+          if (error) {
+            console.error('쿼리 실행 중 오류 발생: ', error);
+            res.status(500).send('내부 서버 오류');
+          } else {
+            console.log('게시물 삭제 완료');
+            res.redirect(redirectUrl);
+          }
+        });
       } else {
-        if (
-          results.length > 0 &&
-          results[0].nickname === req.session.user.nickname
-        ) {
-          pool.query("DELETE FROM board WHERE no = ?", [paramsNo], (error) => {
-            if (error) {
-              console.error("쿼리 실행 중 오류 발생: ", error);
-              res.status(500).send("내부 서버 오류");
-            } else {
-              console.log("게시물 삭제 완료");
-              res.redirect("/joy");
-            }
-          });
+        res.status(403).send('삭제 권한이 없습니다.');
+      }
+    });
+  };
+  
+  const updatePost = (boardType, postId, title, content, date, res, redirectUrl) => {
+    pool.query(
+      `UPDATE community SET title = ?, content = ?, created_date = ? WHERE no = ? AND board_type = ?`,
+      [title, content, date, postId, boardType],
+      (error) => {
+        if (error) {
+          console.error('쿼리 실행 중 오류 발생: ', error);
+          res.status(500).send('내부 서버 오류');
         } else {
-          res.status(403).send("삭제 권한이 없습니다.");
+          console.log('게시물 수정 완료');
+          res.redirect(redirectUrl);
         }
       }
-    }
-  );
-});
-
-// 게시물 수정 폼
-router.get("/joy/update/:no", (req, res) => {
-  const paramsNo = req.params.no;
-
-  pool.query(
-    "select * from communityjoy where no = ?",
-    [paramsNo],
-    (error, results) => {
+    );
+  };
+  
+  // Dynamic routes for each board type
+  const boards = ['joy', 'sadness', 'fear', 'anxiety'];
+  
+  boards.forEach(board => {
+    // Get board data
+    router.post(`/${board}`, (req, res) => getBoardData(board, res));
+  
+    // Create new post
+    router.post(`/CommunityWrite/${board}`, (req, res) => {
+      const { title, content } = req.body;
+      const nickname = req.session.user.nickname;
+      const createdDate = moment().format('YYYY-MM-DD HH');
+      insertBoardData(board, title, nickname, content, createdDate, res, `/${board}`);
+    });
+  
+    // Get post details (with comments if applicable)
+    router.get(`/${board}/PostView/:no`, (req, res) => {
+      getPostDetails(board, req.params.no, req, res);
+    });
+  
+    // Delete post
+    router.get(`/${board}/delete/:no`, (req, res) => deletePost(board, req.params.no, req, res, `/${board}`));
+  
+    // Update post form
+    router.get(`/${board}/update/:no`, (req, res) => {
+      pool.query(`SELECT * FROM community WHERE no = ? AND board_type = ?`, [req.params.no, board], (error, results) => {
+        if (error) {
+          console.error('쿼리 실행 중 오류 발생: ', error);
+          res.status(500).send('내부 서버 오류');
+        } else {
+          if (results.length > 0) {
+            const post = results[0];
+            if (post.nickname === req.session.user.nickname) {
+              res.render(`${board}/update`, { post });
+            } else {
+              res.status(403).send('수정 권한이 없습니다.');
+            }
+          } else {
+            res.status(404).send('게시물을 찾을 수 없습니다.');
+          }
+        }
+      });
+    });
+  
+    // Update post
+    router.post(`/${board}/update/:no`, (req, res) => {
+      const { title, content, created_date } = req.body;
+      updatePost(board, req.params.no, title, content, created_date || new Date(), res, `/${board}`);
+    });
+  });
+  
+  // Notice board routes (admin only)
+  router.post('/notice', checkAdmin, (req, res) => getBoardData('notice', res));
+  router.post('/CommunityWrite/notice', checkAdmin, (req, res) => {
+    const { title, content } = req.body;
+    const nickname = req.session.user.nickname;
+    const createdDate = moment().format('YYYY-MM-DD HH');
+    insertBoardData('notice', title, nickname, content, createdDate, res, '/notice');
+  });
+  router.get('/notice/PostView/:no', checkAdmin, (req, res) => {
+    getPostDetails('notice', req.params.no, req, res);
+  });
+  router.get('/notice/delete/:no', checkAdmin, (req, res) => deletePost('notice', req.params.no, req, res, '/notice'));
+  router.get('/notice/update/:no', checkAdmin, (req, res) => {
+    pool.query('SELECT * FROM community WHERE no = ? AND board_type = ?', [req.params.no, 'notice'], (error, results) => {
       if (error) {
-        console.error("쿼리 실행 중 오류 발생: ", error);
-        res.status(500).send("내부 서버 오류");
+        console.error('쿼리 실행 중 오류 발생: ', error);
+        res.status(500).send('내부 서버 오류');
       } else {
         if (results.length > 0) {
-          const board = results[0];
-          // 게시물 작성자와 현재 로그인 사용자가 일치하는지 확인
-          if (board.nickname === req.session.user.nickname) {
-            res.render("joy/update", { board });
+          const post = results[0];
+          if (post.nickname === req.session.user.nickname) {
+            res.render('notice/update', { post });
           } else {
-            res.status(403).send("수정 권한이 없습니다.");
+            res.status(403).send('수정 권한이 없습니다.');
           }
         } else {
-          res.status(404).send("게시물을 찾을 수 없습니다.");
+          res.status(404).send('게시물을 찾을 수 없습니다.');
         }
       }
-    }
-  );
-});
+    });
+  });
+  router.post('/notice/update/:no', checkAdmin, (req, res) => {
+    const { title, content, created_date } = req.body;
+    updatePost('notice', req.params.no, title, content, created_date || new Date(), res, '/notice');
+  });
 
-// 게시물 수정
-router.post("/joy/update/:no", (req, res) => {
-  const paramsNo = req.params.no;
-  const boardTitle = req.body.title;
-  const boardContent = req.body.content;
-  const boardDate = req.body.created_date || new Date(); // 수정일
-
-  pool.query(
-    "update communityjoy set title = ?, content = ?, created_date = ? where no = ?",
-    [boardTitle, boardContent, boardDate, paramsNo],
-    (error) => {
-      if (error) {
-        console.error("쿼리 실행 중 오류 발생: ", error);
-        res.status(500).send("내부 서버 오류");
-      } else {
-        console.log("게시물 수정 완료");
-        res.redirect("/joy");
-      }
-    }
-  );
-});
+  module.exports = router;
