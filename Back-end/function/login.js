@@ -1,7 +1,6 @@
 //로그인
 const express = require("express");
 const bcrypt = require("bcrypt");
-const app = express();
 const router = express.Router();
 
 // /login에 접속했을 때 다음과 같은 일을 하세요
@@ -125,6 +124,6 @@ router.post("process/signup", async (req, res) => {
 });
 
 //app과 router 연동
-app.use("/loginpage", router);
+router.use("/loginpage", router);
 
 module.exports = router;
