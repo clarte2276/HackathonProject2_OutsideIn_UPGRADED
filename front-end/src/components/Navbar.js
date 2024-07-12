@@ -22,11 +22,11 @@ function Navbar() {
       if (result.loggedIn) {
         navigate(targetPath); // 로그인 상태라면 원래 가려던 경로로 이동
       } else {
-        navigate("/LoginTab", { state: { from: targetPath } }); // 로그인되지 않은 상태라면 로그인 페이지로 리디렉션, 원래 경로 저장
+        navigate("/Loginpage", { state: { from: targetPath } }); // 로그인되지 않은 상태라면 로그인 페이지로 리디렉션, 원래 경로 저장
       }
     } catch (error) {
       console.error("세션 확인 중 오류 발생:", error);
-      navigate("/LoginTab", { state: { from: targetPath } }); // 오류 발생 시 로그인 페이지로 리디렉션, 원래 경로 저장
+      navigate("/Loginpage", { state: { from: targetPath } }); // 오류 발생 시 로그인 페이지로 리디렉션, 원래 경로 저장
     }
   };
 
