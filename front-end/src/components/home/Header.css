@@ -26,11 +26,15 @@
   padding: 0 0;
 }
 
+.line1,
+.line2 {
+  margin-left: 9%;
+}
+
 .line1 {
   position: relative;
   left: 0;
   margin-top: 5%;
-  margin-left: 8%;
   font-family: 'Inter', sans-serif;
   font-optical-sizing: auto;
   font-weight: 700;
@@ -42,7 +46,6 @@
 .line2 {
   position: relative;
   left: 0;
-  margin-left: 8%;
   font-family: 'Inter', sans-serif;
   font-optical-sizing: auto;
   font-weight: 700;
