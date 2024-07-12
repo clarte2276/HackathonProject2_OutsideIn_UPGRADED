@@ -4,66 +4,52 @@
   align-items: center;
   justify-content: center;
   position: relative;
-  height: 100%;
-  width: 100%;
   margin: 0;
   padding: 0;
-  margin-top: 3%;
+  margin-top: 1%;
 }
 
 .loginPage h1 {
   font-family: 'Noto Sans KR';
   font-style: normal;
   font-weight: 900;
-  font-size: 40px;
+  font-size: 30px;
   line-height: 58px;
   color: #000000;
-  margin-bottom: 20px;
+  margin-bottom: 1.5%;
 }
 
 .btnContent {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%;
 }
 
 .textBox input {
-  width: 467px;
-  height: 62px;
+  width: 423px;
+  height: 55px;
   margin-bottom: 20px;
   border: 1px solid #d9d9d9;
   border-radius: 4px;
   display: flex;
   align-items: center;
-}
-
-.idText input,
-.pwText input {
-  width: 100%;
-  height: 100%;
-  border: none;
-  padding: 10px;
-
-  font-family: 'Noto Sans KR';
-  font-style: normal;
-  font-weight: 500;
-  font-size: 20px;
-  line-height: 29px;
+  font-size: 15px;
+  font-weight: 700;
   color: #787878;
+  padding-left: 5%;
 }
 
 .loginpageBtn,
 .signuppageBtn,
 .kakaoBtn {
-  width: 467px;
-  height: 62px;
+  width: 450px;
+  height: 55px;
   margin-bottom: 20px;
   border-radius: 4px;
   font-family: 'Noto Sans KR';
   font-style: normal;
   font-weight: 900;
-  font-size: 24px;
+  font-size: 21px;
   line-height: 35px;
   display: flex;
   align-items: center;
@@ -74,13 +60,14 @@
 
 .loginpageBtn {
   background: #17499e;
+  border: none;
 }
 
 .signuppageBtn {
   background-color: transparent;
   color: black;
   border: none;
-  border-bottom: 5px solid #000000;
+  border-bottom: 3px solid #000000;
 }
 
 .kakaoBtn {
