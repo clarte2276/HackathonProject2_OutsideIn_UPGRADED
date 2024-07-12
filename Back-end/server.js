@@ -51,9 +51,11 @@ app.use(express.static(path.join(__dirname, "public")));
 const mypageRoutes = require("./function/mypage");
 const loginRoutes = require("./function/login");
 const processRoutes = require("./function/process");
+const communityRoutes = require("./function/community");
 app.use("/", mypageRoutes);
 app.use("/", loginRoutes);
 app.use("/", processRoutes);
+app.use("/", communityRoutes);
 
 //모든 요청은 build/index.html로
 app.get("*", (req, res) => {
