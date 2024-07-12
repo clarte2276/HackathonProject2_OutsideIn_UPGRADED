@@ -21,7 +21,7 @@ const JoyCommunity = () => {
   const fetchData = () => {
     // 백엔드에서 게시글 목록을 가져옴
     axios
-      .post('/process/community/joy')
+      .post('/community/joy')
       .then((response) => {
         console.log('응답 데이터:', response.data); // 응답 데이터 출력
         setDataList(response.data);
@@ -67,7 +67,7 @@ const JoyCommunity = () => {
           {currentPosts.map((item, index) => (
             <RowListCommunity key={index}>
               <ColumnListCommunity>
-                <Link to={`/process/joy/PostView/${item.no}`} style={{ textDecoration: 'none' }}>
+                <Link to={`/joy/read/${item.no}`} style={{ textDecoration: 'none' }}>
                   <div className="List_title">{item.title}</div>
                 </Link>
               </ColumnListCommunity>
