@@ -4,6 +4,10 @@ import { useNavigate } from 'react-router-dom';
 import Select from 'react-select';
 import axios from 'axios';
 import useUserData from '../useUserData';
+import sadnessImg from '../images/sadness.png';
+import anxietyImg from '../images/anxiety.png';
+import fearImg from '../images/fear.png';
+import userImg from '../images/mypageuser.png';
 
 function Signuppage() {
   const navigate = useNavigate();
@@ -38,6 +42,7 @@ function Signuppage() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (lastName && firstName && usernickname && birth && gender && userId && password && state) {
+      const profileImage = getProfileImage(state);
       const signupData = {
         lastName,
         firstName,
@@ -47,6 +52,7 @@ function Signuppage() {
         username: userId,
         password,
         state,
+        profileImage,
       };
 
       try {
@@ -66,6 +72,19 @@ function Signuppage() {
       }
     } else {
       alert('모든 정보를 입력해주세요.');
+    }
+  };
+
+  const getProfileImage = (state) => {
+    switch (state) {
+      case '우울':
+        return sadnessImg;
+      case '불안':
+        return anxietyImg;
+      case '강박':
+        return fearImg;
+      default:
+        return userImg;
     }
   };
 

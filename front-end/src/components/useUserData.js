@@ -1,5 +1,9 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import sadnessImg from './images/sadness.png';
+import anxietyImg from './images/anxiety.png';
+import fearImg from './images/fear.png';
+import mypageUser from './images/mypageuser.png';
 
 const useUserData = (initialData = {}) => {
   const [firstName, setFirstName] = useState(initialData.firstName || '');
@@ -10,6 +14,7 @@ const useUserData = (initialData = {}) => {
   const [userId, setUserId] = useState(initialData.userId || '');
   const [password, setPassword] = useState(initialData.password || '');
   const [state, setState] = useState(initialData.state || '');
+  const [profileImage, setProfileImage] = useState(mypageUser); // 프로필 이미지 초기값 : mypageUser로 설정해둠
 
   const fetchUserData = async () => {
     try {
@@ -25,14 +30,30 @@ const useUserData = (initialData = {}) => {
       setUserId(userData.id || ''); // 아이디 값 변경 불가
       setPassword(userData.password || '');
       setState(userData.state || '');
+      setProfileImage(getProfileImage(userData.state));
     } catch (error) {
       console.error('사용자 데이터를 가져오는 중 오류 발생:', error);
+    }
+  };
+
+  const getProfileImage = (state) => {
+    switch (state) {
+      case '우울':
+        return sadnessImg;
+      case '불안':
+        return anxietyImg;
+      case '강박':
+        return fearImg;
+      default:
+        return mypageUser;
     }
   };
 
   useEffect(() => {
     if (!initialData) {
       fetchUserData();
+    } else {
+      setProfileImage(getProfileImage(initialData.state));
     }
   }, []);
 
@@ -72,6 +93,7 @@ const useUserData = (initialData = {}) => {
     userId,
     password,
     state,
+    profileImage,
     setFirstName,
     setLastName,
     setUsernickname,
@@ -80,6 +102,7 @@ const useUserData = (initialData = {}) => {
     setUserId,
     setPassword,
     setState,
+    setProfileImage,
     handleSave,
   };
 };

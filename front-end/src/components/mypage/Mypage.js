@@ -1,8 +1,13 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './Mypage.css';
 import { useNavigate } from 'react-router-dom';
 import useUserData from '../useUserData';
-import mypageUser from '../images/mypageUser';
+import mypageUser from '../images/mypageuser.png';
+import anxietyImg from '../images/anxiety.png';
+import fearImg from '../images/fear.png';
+import sadnessImg from '../images/sadness.png';
+import Select from 'react-select';
+import axios from 'axios';
 
 function Mypage() {
   const navigate = useNavigate();
@@ -25,6 +30,12 @@ function Mypage() {
     setState,
     handleSave,
   } = useUserData();
+  const [profileImage, setProfileImage] = useState(mypageUser);
+
+  useEffect(() => {
+    //상태에 따라 프로필 이미지 자동 설정
+    setProfileImage(getProfileImage(state));
+  }, [state]);
 
   const genderOptions = [
     { value: '남성', label: '남성' },
@@ -65,7 +76,22 @@ function Mypage() {
   };
 
   const handleStateChange = (selectedOption) => {
-    setState(selectedOption ? selectedOption.value : '');
+    const selectedState = selectedOption ? selectedOption.value : '';
+    setState(selectedState);
+    setProfileImage(getProfileImage(selectedState));
+  };
+
+  const getProfileImage = (state) => {
+    switch (state) {
+      case '우울':
+        return sadnessImg;
+      case '불안':
+        return anxietyImg;
+      case '강박':
+        return fearImg;
+      default:
+        return mypageUser;
+    }
   };
 
   const handleSaveWrapper = (e) => {
@@ -98,13 +124,58 @@ function Mypage() {
     }
   };
 
+  const customSelectStyles1 = {
+    control: (provided) => ({
+      ...provided,
+      width: '420px',
+      height: '25px',
+      border: '2px solid #b6bec6',
+      borderRadius: '10px',
+      fontSize: '1rem',
+      fontWeight: '400',
+      color: '#787878',
+      paddingLeft: '4.5%',
+      paddingBottom: '12%',
+    }),
+    menu: (provided) => ({
+      ...provided,
+      width: '420px',
+    }),
+    indicatorSeparator: (provided) => ({
+      ...provided,
+      display: 'none',
+    }),
+  };
+
+  const customSelectStyles2 = {
+    control: (provided) => ({
+      ...provided,
+      width: '870px',
+      height: '45px',
+      border: '2px solid #b6bec6',
+      borderRadius: '10px',
+      fontSize: '1rem',
+      fontWeight: '400',
+      color: '#787878',
+      paddingLeft: '2%',
+    }),
+    menu: (provided) => ({
+      ...provided,
+      width: '870px',
+    }),
+    indicatorSeparator: (provided) => ({
+      ...provided,
+      display: 'none',
+    }),
+  };
+
   return (
     <div className="myPage">
       <form onSubmit={handleSaveWrapper} className="userProfileForm">
-        {/* 첫 번째 컴포넌트*/}
+        {/* 첫 번째 컴포넌트 : 이미지 업로드/제거 */}
         <div className="userProfileContainer">
           <div className="userProfile">
-            <img className="mypageImg" src={mypageUser} alt=""></img>
+            <img className="mypageImg" src={profileImage} alt="프로필 이미지"></img>
             <div className="userProfileBtn">
               <button type="button" className="imgUplode">
                 이미지 업로드
@@ -168,6 +239,7 @@ function Mypage() {
               value={genderOptions.find((option) => option.value === gender)}
               onChange={handleGenderChange}
               placeholder="성별"
+              styles={customSelectStyles1}
               isClearable
             />
           </div>
@@ -178,7 +250,8 @@ function Mypage() {
               options={stateOptions}
               value={stateOptions.find((option) => option.value === state)}
               onChange={handleStateChange}
-              placeholder="상태"
+              placeholder="나의 상태는 ~입니다."
+              styles={customSelectStyles2}
               isClearable
             />
           </div>
