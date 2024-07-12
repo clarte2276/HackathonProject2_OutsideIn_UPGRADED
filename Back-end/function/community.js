@@ -1,3 +1,4 @@
+//커뮤니티 게시판
 const express = require("express");
 const mysql = require("mysql");
 const db_config = require("../config/db_config.json");
@@ -14,7 +15,7 @@ const pool = mysql.createPool({
   debug: false,
 });
 
-// Middleware to check if the user is an admin
+// 관리자 계정 확인 미들웨어
 const checkAdmin = (req, res, next) => {
   if (req.session && req.session.user && req.session.user.isAdmin) {
     next();
@@ -23,7 +24,7 @@ const checkAdmin = (req, res, next) => {
   }
 };
 
-// Helper functions
+// 게시판 데이터
 const getBoardData = (boardType, res) => {
   pool.query(
     `SELECT no, title, nickname, content, created_date FROM community WHERE board_type = ?`,
@@ -146,14 +147,14 @@ const updatePost = (boardType, postId, title, content, date, res, redirectUrl) =
   );
 };
 
-// Dynamic routes for each board type
+// 게시판 타입
 const boards = ['joy', 'sadness', 'fear', 'anxiety'];
 
 boards.forEach(board => {
-  // Get board data
+  // 게시판 데이터 가져오기
   router.post(`/${board}`, (req, res) => getBoardData(board, res));
 
-  // Create new post
+  // 새 글 작성
   router.post(`/CommunityWrite/${board}`, (req, res) => {
     const { title, content } = req.body;
     const nickname = req.session.user.nickname;
@@ -161,15 +162,15 @@ boards.forEach(board => {
     insertBoardData(board, title, nickname, content, createdDate, res, `/${board}`);
   });
 
-  // Get post details (with comments if applicable)
+  // 상세보기
   router.get(`/${board}/PostView/:no`, (req, res) => {
     getPostDetails(board, req.params.no, req, res);
   });
 
-  // Delete post
+  // 게시글 삭제
   router.get(`/${board}/delete/:no`, (req, res) => deletePost(board, req.params.no, req, res, `/${board}`));
 
-  // Update post form
+  // 게시글 수정 폼
   router.get(`/${board}/update/:no`, (req, res) => {
     pool.query(
       `SELECT * FROM community WHERE no = ? AND board_type = ?`,
@@ -194,14 +195,14 @@ boards.forEach(board => {
     );
   });
 
-  // Update post
+  // 게시글 수정
   router.post(`/${board}/update/:no`, (req, res) => {
     const { title, content, created_date } = req.body;
     updatePost(board, req.params.no, title, content, created_date || new Date(), res, `/${board}`);
   });
 });
 
-// Notice board routes (admin only)
+// 노티스 게시판 관리자만 접근
 router.post('/notice', checkAdmin, (req, res) => getBoardData('notice', res));
 router.post('/CommunityWrite/notice', checkAdmin, (req, res) => {
   const { title, content } = req.body;
