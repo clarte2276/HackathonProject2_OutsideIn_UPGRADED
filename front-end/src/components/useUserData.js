@@ -5,7 +5,7 @@ const useUserData = (initialData = {}) => {
   const [firstName, setFirstName] = useState(initialData.firstName || '');
   const [lastName, setLastName] = useState(initialData.lastName || '');
   const [usernickname, setUsernickname] = useState(initialData.usernickname || '');
-  const [birthdate, setBirthdate] = useState(initialData.birthdate || '');
+  const [birth, setBirth] = useState(initialData.birth || '');
   const [gender, setGender] = useState(initialData.gender || '');
   const [userId, setUserId] = useState(initialData.userId || '');
   const [password, setPassword] = useState(initialData.password || '');
@@ -20,7 +20,7 @@ const useUserData = (initialData = {}) => {
       setFirstName(userData.Lastname || '');
       setLastName(userData.Firstname || '');
       setUsernickname(userData.nickname || '');
-      setBirthdate(userData.birth || '');
+      setBirth(userData.birth || '');
       setGender(userData.gender || '');
       setUserId(userData.id || ''); // 아이디 값 변경 불가
       setPassword(userData.password || '');
@@ -42,7 +42,7 @@ const useUserData = (initialData = {}) => {
         lastName,
         firstName,
         gender,
-        birth: birthdate,
+        birth,
         usernickname,
         id: userId,
         password,
@@ -67,7 +67,7 @@ const useUserData = (initialData = {}) => {
     firstName,
     lastName,
     usernickname,
-    birthdate,
+    birth,
     gender,
     userId,
     password,
@@ -75,7 +75,7 @@ const useUserData = (initialData = {}) => {
     setFirstName,
     setLastName,
     setUsernickname,
-    setBirthdate,
+    setBirth,
     setGender,
     setUserId,
     setPassword,

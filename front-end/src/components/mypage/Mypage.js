@@ -10,7 +10,7 @@ function Mypage() {
     firstName,
     lastName,
     usernickname,
-    birthdate,
+    birth,
     gender,
     userId,
     password,
@@ -18,7 +18,7 @@ function Mypage() {
     setFirstName,
     setLastName,
     setUsernickname,
-    setBirthdate,
+    setBirth,
     setGender,
     setUserId,
     setPassword,
@@ -49,8 +49,8 @@ function Mypage() {
       case 'usernickname':
         setUsernickname(value);
         break;
-      case 'birthdate':
-        setBirthdate(value);
+      case 'birth':
+        setBirth(value);
         break;
       case 'password':
         setPassword(value);
@@ -159,13 +159,7 @@ function Mypage() {
           <div className="additional2">
             <p>
               생년월일
-              <input
-                type="text"
-                name="birthdate"
-                placeholder="생년월일"
-                value={birthdate}
-                onChange={handleInputChange}
-              />
+              <input type="text" name="birth" placeholder="생년월일" value={birth} onChange={handleInputChange} />
             </p>
             성별
             <Select

@@ -136,7 +136,7 @@ function Signuppage() {
             onChange={(e) => setUsernickname(e.target.value)}
             required
           />
-          <input type="text" placeholder="생년월일" value={birth} onChange={(e) => setbirth(e.target.value)} required />
+          <input type="text" placeholder="생년월일" value={birth} onChange={(e) => setBirth(e.target.value)} required />
           <Select
             className="genderLabel"
             options={genderOptions}
