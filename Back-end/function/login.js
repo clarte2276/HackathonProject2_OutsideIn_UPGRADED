@@ -5,7 +5,7 @@ const app = express();
 const router = express.Router();
 
 // /login에 접속했을 때 다음과 같은 일을 하세요
-app.get("/login", (req, res) => {
+router.post("/process/login", (req, res) => {
   console.log("/login 호출됨", req.body);
   const paramID = req.body.id;
   const paramPW = req.body.password;
@@ -63,7 +63,7 @@ app.get("/login", (req, res) => {
   });
 });
 
-app.get("/signup", async (req, res) => {
+router.post("process/signup", async (req, res) => {
   console.log("/signup 호출됨", req.body);
 
   const paramLastName = req.body.lastName;
@@ -124,10 +124,7 @@ app.get("/signup", async (req, res) => {
   }
 });
 
-// /login/~~ 에 접속했을 때 다음과 같은 일을 하세요
-router.get("/~~", (req, res) => {
-  console.log("Here is login/~~~ page");
-});
 //app과 router 연동
-app.use("/login", router);
+app.use("/loginpage", router);
+
 module.exports = router;
