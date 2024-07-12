@@ -52,10 +52,12 @@ const mypageRoutes = require("./function/mypage");
 const loginRoutes = require("./function/login");
 const processRoutes = require("./function/process");
 const communityRoutes = require("./function/community");
+const chatsRoutes = require("./function/chats");
 app.use("/", mypageRoutes);
 app.use("/", loginRoutes);
 app.use("/", processRoutes);
 app.use("/", communityRoutes);
+app.use("/", chatsRoutes);
 
 //모든 요청은 build/index.html로
 app.get("*", (req, res) => {
