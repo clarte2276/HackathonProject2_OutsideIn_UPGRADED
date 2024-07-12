@@ -6,12 +6,15 @@ const db_config = require("./config/db_config.json");
 const app = express();
 const router = express.Router();
 
-// /process에 접속했을 때 다음과 같은 일을 하세요
-app.get("/process");
+// /index 접속했을 때 다음과 같은 일을 하세요
+app.get("/process", (req, res) => {
+  console.log("Here is process page");
+});
 
-// /login/check 에 접속했을 때 다음과 같은 일을 하세요
-router.get("/login-check");
-
+// /login/~~ 에 접속했을 때 다음과 같은 일을 하세요
+router.get("/~~", (req, res) => {
+  console.log("Here is process/~~~ page");
+});
 //app과 router 연동
 app.use("/process", router);
 module.exports = router;

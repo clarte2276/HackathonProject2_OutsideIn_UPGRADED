@@ -6,12 +6,15 @@ const db_config = require("./config/db_config.json");
 const app = express();
 const router = express.Router();
 
-// /index에 접속했을 때 다음과 같은 일을 하세요
-app.get("/index");
+// /index 접속했을 때 다음과 같은 일을 하세요
+app.get("/index", (req, res) => {
+  console.log("Here is index page");
+});
 
-// /mypage/~~에 접속했을 때 다음과 같은 일을 하세요
-router.get("/");
-
-//app과 router연동
+// /login/~~ 에 접속했을 때 다음과 같은 일을 하세요
+router.get("/~~", (req, res) => {
+  console.log("Here is login/~~~ page");
+});
+//app과 router 연동
 app.use("/index", router);
 module.exports = router;
