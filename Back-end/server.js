@@ -5,10 +5,7 @@ const path = require("path");
 const session = require("express-session");
 const MySQLStore = require("express-mysql-session")(session);
 const db_config = require("./config/db_config.json");
-
 const app = express();
-const http = require("http").createServer(app);
-const io = require("socket.io")(http);
 
 // MySQL 세션 스토어 옵션
 const sessionStoreOptions = {
@@ -50,11 +47,17 @@ app.use(
 app.use(express.static(path.join(__dirname, "../Front-end/build")));
 app.use(express.static(path.join(__dirname, "public")));
 
+//js파일 연동
 const indexRoutes = require("./function/index");
 const mypageRoutes = require("./function/mypage");
 const loginRoutes = require("./function/login");
 const processRoutes = require("./function/process");
+app.use("/", indexRoutes);
+app.use("/", mypageRoutes);
+app.use("/", loginRoutes);
+app.use("/", processRoutes);
 
+//모든 요청은 build/index.html로
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "../Front-end/build", "index.html"));
 });
