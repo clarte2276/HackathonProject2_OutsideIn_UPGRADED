@@ -7,6 +7,10 @@ import Home from './components/home/Home.js';
 import Information from './components/information/Information.js';
 import Hospital from './components/hospital/Hospital.js';
 import JoyCommunity from './components/community/JoyCommunity.js';
+import SadnessCommunity from './components/community/SadnessCommunity.js';
+import AnxietyCommunity from './components/community/AnxietyCommunity.js';
+import FearCommunity from './components/community/FearCommunity.js';
+import NoticeCommunity from './components/community/NoticeCommunity.js';
 import Loginpage from './components/mypage/Loginpage.js';
 import Signuppage from './components/mypage/Signuppage.js';
 import Mypage from './components/mypage/Mypage.js';
@@ -27,6 +31,10 @@ function App() {
             <Route path="/information" element={<Information />} />
             <Route path="/hospital" element={<Hospital />} />
             <Route path="/joy" element={<JoyCommunity />} />
+            <Route path="/sadness" element={<SadnessCommunity />} />
+            <Route path="/anxiety" element={<AnxietyCommunity />} />
+            <Route path="/fear" element={<FearCommunity />} />
+            <Route path="/notice" element={<NoticeCommunity />} />
             <Route path="/Loginpage" element={<Loginpage />} />
             <Route path="/Signuppage" element={<Signuppage />} />
             <Route path="/Mypage" element={<Mypage />} />
