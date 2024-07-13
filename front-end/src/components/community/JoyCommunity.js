@@ -18,10 +18,10 @@ const JoyCommunity = () => {
   const postsPerPage = 10;
   const location = useLocation();
 
-  const fetchData = () => {
+  const fetchData = async () => {
     // 백엔드에서 게시글 목록을 가져옴
     axios
-      .post('/joy')
+      .get('/joy')
       .then((response) => {
         console.log('응답 데이터:', response.data); // 응답 데이터 출력
         setDataList(response.data);
