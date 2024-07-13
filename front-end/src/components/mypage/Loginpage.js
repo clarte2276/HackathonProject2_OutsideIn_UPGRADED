@@ -31,7 +31,7 @@ function Loginpage() {
 
   const handleKakaoLogin = () => {
     const REST_API_KEY = "f4dfb2e0ef054a0117ea1b187b8a8eb5"; // 카카오 앱 키
-    const REDIRECT_URI = "http://localhost:3000/oauth/callback/kakao";
+    const REDIRECT_URI = "http://localhost:3000";
     const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
     window.location.href = kakaoAuthUrl;
   };

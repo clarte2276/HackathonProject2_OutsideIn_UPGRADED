@@ -21,7 +21,7 @@ app.use(
 
 const kakaoClientId = "f81ff82b7f6b4860a73435151afb1404"; // 카카오 앱 키
 const kakaoClientSecret = "YOUR_CLIENT_SECRET"; // 카카오 앱 시크릿 (선택 사항)
-const redirectUri = "http://localhost:3000/oauth/callback/kakao";
+const redirectUri = "http://localhost:3000";
 
 app.get("/oauth/callback/kakao", async (req, res) => {
   const code = req.query.code;
