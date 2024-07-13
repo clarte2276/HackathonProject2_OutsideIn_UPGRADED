@@ -62,7 +62,7 @@ const useUserData = (initialData = {}) => {
         gender,
         birth,
         nickname: usernickname,
-        // id: userId,
+        id: userId,
         password,
         state,
       };
