@@ -85,7 +85,6 @@ router.post("/process/signup", async (req, res) => {
   const paramID = req.body.username;
   const paramPW = req.body.password;
   const paramState = req.body.state;
-  const paramroomid = req.body.roomid;
 
   try {
     const hashedPassword = await bcrypt.hash(paramPW, 10);
