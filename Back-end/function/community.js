@@ -22,10 +22,14 @@ const getBoardData = (boardType, res) => {
     [boardType],
     (error, results) => {
       if (error) {
-        console.error(error);
-        res.status(500).send('서버 오류');
+        console.error('데이터베이스 오류:', error);
+        res.status(500).json({ error: '서버에서 게시판 데이터를 불러오는 중 오류가 발생했습니다.' });
       } else {
-        res.json(results);
+        if (results.length === 0) {
+          res.status(404).json({ message: '해당 게시판에 게시물이 없습니다.' });
+        } else {
+          res.json(results);
+        }
       }
     }
   );
@@ -151,7 +155,7 @@ const getUpdateForm = (postId, boardType, req, res) => {
 // 댓글 가져오기
 const getComments = (boardNo, boardType, res) => {
   pool.query(
-    `SELECT * FROM comments WHERE board_no = ? AND board_type = ? ORDER BY created_at DESC`,
+    `SELECT * FROM comments WHERE board_no = ? AND board_type = ? ORDER BY created_date DESC`,
     [boardNo, boardType],
     (error, results) => {
       if (error) {
@@ -164,11 +168,32 @@ const getComments = (boardNo, boardType, res) => {
   );
 };
 
+// 댓글 작성 함수
+const insertComment = (boardNo, boardType, nickname, content, res) => {
+  const createdAt = moment().format('YYYY-MM-DD HH:mm:ss');
+
+  pool.query(
+    'INSERT INTO comments (board_no, board_type, nickname, content, created_date) VALUES (?, ?, ?, ?, ?)',
+    [boardNo, boardType, nickname, content, createdAt],
+    (error, results) => {
+      if (error) {
+        console.error('댓글 작성 중 오류 발생:', error);
+        res.status(500).send('서버 오류');
+      } else {
+        res.status(201).send('댓글 작성 완료');
+      }
+    }
+  );
+};
+
 // 게시판 타입
 const boards = ['joy', 'sadness', 'fear', 'anxiety'];
 boards.forEach((board) => {
   // 게시판 데이터 가져오기
-  router.post(`/:board`, (req, res) => getBoardData(board, res));
+  router.post('/:board', (req, res) => {
+    const board = req.params.board;
+    getBoardData(board, res);
+  });
 
   // 새 글 작성하는 링크는 localhost:3000/{보드이름}/new_Post 로 만들어주세요.
   // 새 글 작성
@@ -218,8 +243,17 @@ boards.forEach((board) => {
 
   // 특정 게시물의 댓글 가져오기
   router.get('/:board/comments/:no', (req, res) => {
-    const { no, board } = req.params;
+    const { no } = req.params;
     getComments(no, board, res);
+  });
+
+  // 새로운 댓글 작성
+  router.post('/:board/PostView/:no/comments', (req, res) => {
+    const { no } = req.params;
+    const { content } = req.body;
+    const nickname = req.session.user.nickname;
+
+    insertComment(no, board, nickname, content, res);
   });
 
   router.use('{board}', router);
