@@ -13,6 +13,7 @@ function UpdateJoy() {
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [canEdit, setCanEdit] = useState(false);
 
   useEffect(() => {
     axios
@@ -21,6 +22,7 @@ function UpdateJoy() {
         const { title, content } = response.data;
         setPost({ title, body: content });
         setLoading(false);
+        setCanEdit(true);
       })
       .catch((error) => {
         if (error.response && error.response.status === 403) {
@@ -32,7 +34,7 @@ function UpdateJoy() {
           setLoading(false);
         }
       });
-  }, [no]);
+  }, [no, navigate]);
 
   const onChange = (event) => {
     const { value, name } = event.target;
@@ -46,7 +48,7 @@ function UpdateJoy() {
   const updatePost = async (event) => {
     event.preventDefault();
     try {
-      await axios.put(`/joy/Postview/${no}/process/update`, { title: post.title, content: post.body });
+      await axios.post(`/joy/Postview/${no}/process/update`, { title: post.title, content: post.body });
       alert('수정되었습니다.');
       navigate(`/joy/PostView/${no}`);
     } catch (error) {
@@ -70,6 +72,9 @@ function UpdateJoy() {
 
   if (error) {
     return <div>{error}</div>;
+  }
+  if (!canEdit) {
+    return <div>수정 권한이 없습니다.</div>; // 수정 권한이 없을 때 보여줄 내용
   }
 
   return (
