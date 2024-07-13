@@ -15,7 +15,6 @@ function ReadJoy() {
     // 백엔드에서 게시글 목록을 가져옴
     const fetchPost = async () => {
       try {
-        // const response = await axios.get(`/joy/PostView/:no`);
         const response = await axios.get(`/joy/PostView/${no}`); // API 엔드포인트 문자열 보간
         console.log('응답 데이터:', response.data);
         setPost(response.data);

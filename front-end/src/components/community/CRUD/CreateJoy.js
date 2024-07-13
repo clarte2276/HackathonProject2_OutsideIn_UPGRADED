@@ -35,9 +35,11 @@ function CreateJoy() {
     };
 
     try {
-      await axios.post(`/joy/process/new_Post`, newPost, { withCredentials: true });
+      const response = await axios.post(`/joy/process/new_Post`, newPost, { withCredentials: true });
+      const newPostId = response.data.no;
+      console.log('왜안돼', { newPostId }, { newPost }, response.data);
       alert('등록되었습니다.');
-      navigate(`/joy/PostView/${nextNo}`, { state: { newPost } });
+      navigate(`/joy/PostView/${newPostId}`, { state: { newPost } });
     } catch (error) {
       console.error('Error saving post:', error);
       alert('글을 저장하는 도중 오류가 발생했습니다.');
@@ -45,7 +47,7 @@ function CreateJoy() {
   };
 
   const backToList = () => {
-    navigate('/community/joy');
+    navigate('/joy');
   };
 
   return (
