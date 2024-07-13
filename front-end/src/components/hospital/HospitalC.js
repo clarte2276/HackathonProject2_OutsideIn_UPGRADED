@@ -1,5 +1,6 @@
 import React from 'react';
 import { openChatroomPopup } from './Chatpopup';
+import KakaoMapC from './KakaoMapC.js';
 
 function HospitalC() {
   const handleOnlineConsultation = () => {
@@ -14,6 +15,7 @@ function HospitalC() {
       <div>사진</div>
       <div>약력</div>
       <div>지도</div>
+      <KakaoMapC />
       <div>
         <button type="submit" className="onlineBtn" onClick={handleOnlineConsultation}>
           1:1 온라인 상담 예약

@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { openChatroomPopup } from './Chatpopup';
 import useUserData from '../useUserData';
+import KakaoMapA from './KakaoMapA.js';
 
 function HospitalA() {
   const { userId, fetchUserData } = useUserData();
@@ -20,6 +21,7 @@ function HospitalA() {
       <div>사진</div>
       <div>약력</div>
       <div>지도</div>
+      <KakaoMapA />
       <div>
         <button type="submit" className="onlineBtn" onClick={handleOnlineConsultation}>
           1:1 온라인 상담 예약
