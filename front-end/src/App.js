@@ -6,6 +6,9 @@ import Navbar from './components/Navbar.js';
 import Home from './components/home/Home.js';
 import Information from './components/information/Information.js';
 import Hospital from './components/hospital/Hospital.js';
+import HospitalA from './components/hospital/HospitalA.js';
+import HospitalB from './components/hospital/HospitalB.js';
+import HospitalC from './components/hospital/HospitalC.js';
 import JoyCommunity from './components/community/JoyCommunity.js';
 import Loginpage from './components/mypage/Loginpage.js';
 import Signuppage from './components/mypage/Signuppage.js';
@@ -26,6 +29,9 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/information" element={<Information />} />
             <Route path="/hospital" element={<Hospital />} />
+            <Route path="/hospitalA" element={<HospitalA />} />
+            <Route path="/hospitalB" element={<HospitalB />} />
+            <Route path="/hospitalC" element={<HospitalC />} />
             <Route path="/joy" element={<JoyCommunity />} />
             <Route path="/Loginpage" element={<Loginpage />} />
             <Route path="/Signuppage" element={<Signuppage />} />

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import './Hospital.css';
 import arrowImg from '../images/arrow.png';
 
 function Hospital() {
