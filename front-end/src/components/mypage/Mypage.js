@@ -29,8 +29,14 @@ function Mypage() {
     setPassword,
     setState,
     handleSave,
+    fetchUserData,
   } = useUserData();
   const [profileImage, setProfileImage] = useState(mypageUser);
+
+  useEffect(() => {
+    // useUserData.js에서 제공하는 fetchUserData를 호출하여 초기 데이터를 불러옴
+    fetchUserData();
+  }, []);
 
   useEffect(() => {
     //상태에 따라 프로필 이미지 자동 설정
@@ -94,9 +100,9 @@ function Mypage() {
     }
   };
 
-  const handleSaveWrapper = (e) => {
+  const handleSaveWrapper = async (e) => {
     e.preventDefault();
-    handleSave();
+    await handleSave();
     navigate('/');
   };
 
