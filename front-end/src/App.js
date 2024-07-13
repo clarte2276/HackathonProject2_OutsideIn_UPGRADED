@@ -10,6 +10,10 @@ import HospitalA from './components/hospital/HospitalA.js';
 import HospitalB from './components/hospital/HospitalB.js';
 import HospitalC from './components/hospital/HospitalC.js';
 import JoyCommunity from './components/community/JoyCommunity.js';
+import SadnessCommunity from './components/community/SadnessCommunity.js';
+import AnxietyCommunity from './components/community/AnxietyCommunity.js';
+import FearCommunity from './components/community/FearCommunity.js';
+import NoticeCommunity from './components/community/NoticeCommunity.js';
 import Loginpage from './components/mypage/Loginpage.js';
 import Signuppage from './components/mypage/Signuppage.js';
 import Mypage from './components/mypage/Mypage.js';
@@ -33,6 +37,10 @@ function App() {
             <Route path="/hospitalB" element={<HospitalB />} />
             <Route path="/hospitalC" element={<HospitalC />} />
             <Route path="/joy" element={<JoyCommunity />} />
+            <Route path="/sadness" element={<SadnessCommunity />} />
+            <Route path="/anxiety" element={<AnxietyCommunity />} />
+            <Route path="/fear" element={<FearCommunity />} />
+            <Route path="/notice" element={<NoticeCommunity />} />
             <Route path="/Loginpage" element={<Loginpage />} />
             <Route path="/Signuppage" element={<Signuppage />} />
             <Route path="/Mypage" element={<Mypage />} />
