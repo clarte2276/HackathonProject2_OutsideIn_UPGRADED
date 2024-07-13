@@ -14,6 +14,7 @@ import Footer from './components/Footer.js';
 import CreateJoy from './components/community/CRUD/CreateJoy.js';
 import ReadJoy from './components/community/CRUD/ReadJoy.js';
 import UpdateJoy from './components/community/CRUD/UpdateJoy.js';
+import CreateComment from './components/community/comments/CreateComment.js';
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
             <Route path="/joy/process/new_Post" element={<CreateJoy />} />
             <Route path="/joy/PostView/:no" element={<ReadJoy />} />
             <Route path="/joy/Postview/:no/process/update" element={<UpdateJoy />} />
+            <Route path="/joy/PostView/:postId/comments" element={<CreateComment />} />
           </Routes>
         </div>
         <Footer />

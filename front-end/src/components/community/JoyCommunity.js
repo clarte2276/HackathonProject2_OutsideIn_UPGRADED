@@ -18,17 +18,15 @@ const JoyCommunity = () => {
   const postsPerPage = 10;
   const location = useLocation();
 
-  const fetchData = () => {
-    // 백엔드에서 게시글 목록을 가져옴
-    axios
-      .post('/joy')
-      .then((response) => {
-        console.log('응답 데이터:', response.data); // 응답 데이터 출력
-        setDataList(response.data);
-      })
-      .catch((error) => {
-        console.error('There was an error fetching the posts!', error);
-      });
+  const fetchData = async () => {
+    try {
+      // 백엔드에서 게시글 목록을 가져옴
+      const response = await axios.post(`/joy`);
+      console.log('응답 데이터:', response.data); // 응답 데이터 출력
+      setDataList(Array.isArray(response.data) ? response.data : []);
+    } catch (error) {
+      console.error('There was an error fetching the posts!', error);
+    }
   };
 
   useEffect(() => {
@@ -55,16 +53,16 @@ const JoyCommunity = () => {
   };
 
   return (
-    <>
-      <div className="CommunityAll_layout">
-        <div className="CommunityTop_layout">
-          <TitleBodyCommunity title="기쁨이" body="본인의 챌린지 및 치료 후기를 적어주세요!" />
-          <div className="SelectButtonCommunity_layout">
-            <SelectButtonCommunity />
-          </div>
+    <div className="CommunityAll_layout">
+      <div className="CommunityTop_layout">
+        <TitleBodyCommunity title="기쁨이" body="본인의 챌린지 및 치료 후기를 적어주세요!" />
+        <div className="SelectButtonCommunity_layout">
+          <SelectButtonCommunity />
         </div>
-        <ListCommunity headersName={['제목', '작성자', '작성일']}>
-          {currentPosts.map((item, index) => (
+      </div>
+      <ListCommunity headersName={['제목', '작성자', '작성일']}>
+        {currentPosts.length > 0 ? (
+          currentPosts.map((item, index) => (
             <RowListCommunity key={index}>
               <ColumnListCommunity>
                 <Link to={`/joy/PostView/${item.no}`} style={{ textDecoration: 'none' }}>
@@ -74,18 +72,20 @@ const JoyCommunity = () => {
               <ColumnListCommunity>{item.nickname}</ColumnListCommunity>
               <ColumnListCommunity>{item.created_date}</ColumnListCommunity>
             </RowListCommunity>
-          ))}
-        </ListCommunity>
-        <CreateButtonCommunity emotion="joy" nextNo={getNextNo()} />
-        <div className="PaginationCustom">
-          <PaginationCustom
-            currentPage={currentPage}
-            totalPages={Math.ceil(dataList.length / postsPerPage)}
-            onPageChange={handlePageChange}
-          />
-        </div>
+          ))
+        ) : (
+          <div>게시글이 없습니다.</div>
+        )}
+      </ListCommunity>
+      <CreateButtonCommunity emotion="joy" nextNo={getNextNo()} />
+      <div className="PaginationCustom">
+        <PaginationCustom
+          currentPage={currentPage}
+          totalPages={Math.ceil(dataList.length / postsPerPage)}
+          onPageChange={handlePageChange}
+        />
       </div>
-    </>
+    </div>
   );
 };
 

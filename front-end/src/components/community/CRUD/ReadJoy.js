@@ -1,24 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
-import CRUDHeader from './CRUDHeader';
-import './CRUD.css';
 import axios from 'axios';
+import CRUDHeader from './CRUDHeader';
+import CreateComment from '../comments/CreateComment';
+import './CRUD.css';
 
 function ReadJoy() {
   const { no } = useParams();
   const navigate = useNavigate();
   const [post, setPost] = useState(null);
+  const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    // 백엔드에서 게시글 목록을 가져옴
-    const fetchPost = async () => {
+    // 백엔드에서 게시글과 댓글 목록을 가져옴
+    const fetchPostAndComments = async () => {
       try {
-        // const response = await axios.get(`/joy/PostView/:no`);
-        const response = await axios.get(`/joy/PostView/${no}`); // API 엔드포인트 문자열 보간
-        console.log('응답 데이터:', response.data);
-        setPost(response.data);
+        const postResponse = await axios.get(`/joy/PostView/${no}`);
+        setPost(postResponse.data.post);
+
+        const commentsResponse = await axios.get(`/joy/comments/${no}`);
+        setComments(commentsResponse.data);
+
         setLoading(false);
       } catch (error) {
         console.error('게시글을 불러오는 중 오류 발생:', error);
@@ -27,7 +31,7 @@ function ReadJoy() {
       }
     };
 
-    fetchPost();
+    fetchPostAndComments();
   }, [no]);
 
   const handleDelete = async () => {
@@ -49,6 +53,16 @@ function ReadJoy() {
     }
   };
 
+  const handleCommentSubmit = async () => {
+    // 댓글 등록 후 댓글 목록 다시 불러오기
+    try {
+      const commentsResponse = await axios.get(`/joy/comments/${no}`);
+      setComments(commentsResponse.data);
+    } catch (error) {
+      console.error('댓글 목록을 다시 불러오는 중 오류 발생:', error);
+    }
+  };
+
   if (loading) {
     return <div>로딩 중...</div>;
   }
@@ -61,7 +75,7 @@ function ReadJoy() {
     return <div>게시글을 찾을 수 없습니다.</div>;
   }
 
-  const { title, nickname, created_date, content } = post.post;
+  const { title, nickname, created_date, content } = post;
 
   return (
     <div className="post-container">
@@ -89,8 +103,22 @@ function ReadJoy() {
         <div>로고</div>
         <div>댓글</div>
       </div>
-      <div>댓글들</div>
-      <div>댓글입력창</div>
+      <div>
+        {comments.length > 0 ? (
+          comments.map((comment) => (
+            <div key={comment.comment_no}>
+              <div>{comment.nickname}</div>
+              <div>{comment.content}</div>
+              <div>{comment.created_date}</div>
+            </div>
+          ))
+        ) : (
+          <div>댓글이 없습니다.</div>
+        )}
+      </div>
+      <div>
+        <CreateComment postId={no} onCommentSubmit={handleCommentSubmit} />
+      </div>
     </div>
   );
 }
