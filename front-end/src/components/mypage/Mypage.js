@@ -29,8 +29,14 @@ function Mypage() {
     setPassword,
     setState,
     handleSave,
+    fetchUserData,
   } = useUserData();
   const [profileImage, setProfileImage] = useState(mypageUser);
+
+  useEffect(() => {
+    // useUserData.js에서 제공하는 fetchUserData를 호출하여 초기 데이터를 불러옴
+    fetchUserData();
+  }, []);
 
   useEffect(() => {
     //상태에 따라 프로필 이미지 자동 설정
@@ -94,9 +100,9 @@ function Mypage() {
     }
   };
 
-  const handleSaveWrapper = (e) => {
+  const handleSaveWrapper = async (e) => {
     e.preventDefault();
-    handleSave();
+    await handleSave();
     navigate('/');
   };
 
@@ -190,10 +196,11 @@ function Mypage() {
             <div className="userProfileName">
               <p>
                 이름
-                <input type="text" name="firstName" placeholder="이름" value={firstName} onChange={handleInputChange} />
+                <input type="text" name="lastName" placeholder="이름" value={lastName} onChange={handleInputChange} />
               </p>
               <p>
-                성 <input type="text" name="lastName" placeholder="성" value={lastName} onChange={handleInputChange} />
+                성{' '}
+                <input type="text" name="firstName" placeholder="성" value={firstName} onChange={handleInputChange} />
               </p>
             </div>
             <div className="userProfileNickname">
@@ -230,7 +237,13 @@ function Mypage() {
           <div className="additional2">
             <p>
               생년월일
-              <input type="text" name="birth" placeholder="생년월일" value={birth} onChange={handleInputChange} />
+              <input
+                type="text"
+                name="birth"
+                placeholder="생년월일(ex. 20240713)"
+                value={birth}
+                onChange={handleInputChange}
+              />
             </p>
             성별
             <Select
