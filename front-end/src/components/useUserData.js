@@ -38,6 +38,18 @@ const useUserData = (initialData = {}) => {
     } catch (error) {
       console.error("사용자 데이터를 가져오는 중 오류 발생:", error);
     }
+    try {
+      // 사용자가 로그인한 후 호출 (유저정보 가져오기)
+      const response = await axios.post("/process/hospital");
+      const userData = response.data;
+      setUsernickname(userData.nickname || "");
+      setUserId(userData.id || ""); // 아이디 값 변경 불가
+    } catch (error) {
+      console.error(
+        "/hospital에서 사용자 데이터를 가져오는 중 오류 발생:",
+        error
+      );
+    }
   };
 
   const getProfileImage = (state) => {

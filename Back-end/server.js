@@ -73,6 +73,6 @@ app.get('*', (req, res) => {
 });
 
 // 서버 시작
-app.listen(3011, () => {
+app.listen(3000, () => {
   console.log('서버가 3000 포트에서 실행 중입니다.');
 });

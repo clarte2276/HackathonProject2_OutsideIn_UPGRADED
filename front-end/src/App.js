@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './App.css';
 
@@ -22,9 +22,6 @@ import CreateJoy from './components/community/CRUD/CreateJoy.js';
 import ReadJoy from './components/community/CRUD/ReadJoy.js';
 import UpdateJoy from './components/community/CRUD/UpdateJoy.js';
 import CreateComment from './components/community/comments/CreateComment.js';
-import CreateNotice from './components/community/CRUD/CreateNotice.js';
-import ReadNotice from './components/community/CRUD/ReadNotice.js';
-import UpdateNotice from './components/community/CRUD/UpdateNotice.js';
 
 function App() {
   return (
@@ -36,9 +33,9 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/information" element={<Information />} />
             <Route path="/hospital" element={<Hospital />} />
-            <Route path="/hospitalA" element={<HospitalA />} />
-            <Route path="/hospitalB" element={<HospitalB />} />
-            <Route path="/hospitalC" element={<HospitalC />} />
+            <Route path="/hospital/HospitalA" element={<HospitalA />} />
+            <Route path="/hospital/HospitalB" element={<HospitalB />} />
+            <Route path="/hospital/HospitalC" element={<HospitalC />} />
             <Route path="/joy" element={<JoyCommunity />} />
             <Route path="/sadness" element={<SadnessCommunity />} />
             <Route path="/anxiety" element={<AnxietyCommunity />} />
@@ -49,6 +46,9 @@ function App() {
             <Route path="/Mypage" element={<Mypage />} />
             <Route path="/joy/process/new_Post" element={<CreateJoy />} />
             <Route path="/joy/PostView/:no" element={<ReadJoy />} />
+            <Route path="/process/chat" element={<Chat />} />
+            <Route path="/Chatroom/:my_roomid/to/:roomId" element={<Chatroom />} />
+            <Route path="/process/chatpage" element={<Chatpage />} />
             <Route path="/joy/Postview/:no/process/update" element={<UpdateJoy />} />
             <Route path="/joy/PostView/:postId/comments" element={<CreateComment />} />
             <Route path="/notice/process/new_Post" element={<CreateNotice />} />

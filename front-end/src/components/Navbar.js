@@ -70,7 +70,13 @@ function Navbar() {
       </div>
       <div className="chat">
         <div>
-          <img src={chat} alt="chat" width={55} />
+          <Link
+            className={`navbarMenu ${location.pathname === '/' ? 'underline' : ''}`}
+            href="/process/chatpage"
+            onClick={(e) => checkLogin(e, '/process/chatpage')}
+          >
+            <img src={chat} alt="chat" width={55} />
+          </Link>
         </div>
       </div>
     </div>

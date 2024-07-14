@@ -26,8 +26,9 @@ router.post('/', (req, res) => {
       return res.status(500).send('DB 서버 연결 실패');
     }
 
+    //select 할 때 db로 정보 불러오는 건데 여기서 roomid를 안가져오고 있었음. -> 수정완료
     const exec = conn.query(
-      'SELECT Lastname, Firstname, nickname, id, birth, gender, state FROM users WHERE id = ?',
+      'SELECT Lastname, Firstname, nickname, id, birth, gender, state, roomid FROM users WHERE id = ?',
       [userID],
       (err, rows) => {
         conn.release();

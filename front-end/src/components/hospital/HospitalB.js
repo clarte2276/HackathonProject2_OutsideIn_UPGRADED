@@ -1,11 +1,43 @@
-import React from 'react';
-import { openChatroomPopup } from './Chatpopup';
-import KakaoMapB from './KakaoMapB.js';
+import React, { useEffect } from "react";
+import { openChatroomPopup } from "./Chatpopup";
+import useUserData from "../useUserData";
+import KakaoMapB from "./KakaoMapB.js";
 
 function HospitalB() {
-  const handleOnlineConsultation = () => {
-    const roomId = 2;
-    openChatroomPopup(roomId);
+  const { userId, fetchUserData } = useUserData();
+
+  useEffect(() => {
+    fetchUserData();
+  }, [fetchUserData]);
+
+  const handleOnlineConsultation = (id) => {
+    const my_id = id;
+    if (!my_id) {
+      console.error("My Room ID is not defined");
+      return;
+    }
+
+    // 팝업 url 여기서 설정 후 불러와야함
+    const url = `/hospital/HospitalB/${my_id}/to/doctor2`;
+    const title = "popup";
+    const options =
+      "toolbar=no,scrollbars=no,resizable=yes,status=no,menubar=no,width=400,height=500,top=100,left=200";
+    window.open(url, title, options);
+  };
+
+  const handleReservation = (id) => {
+    const my_id = id;
+    if (!my_id) {
+      console.error("My Room ID is not defined");
+      return;
+    }
+
+    // 팝업 url 여기서 설정 후 불러와야함
+    const url = `/hospital/HospitalB/${my_id}/reserve/doctor2`;
+    const title = "popup";
+    const options =
+      "toolbar=no,scrollbars=no,resizable=yes,status=no,menubar=no,width=400,height=500,top=100,left=200";
+    window.open(url, title, options);
   };
 
   return (
@@ -17,10 +49,18 @@ function HospitalB() {
       <div>지도</div>
       <KakaoMapB />
       <div>
-        <button type="submit" className="onlineBtn" onClick={handleOnlineConsultation}>
+      <button
+          type="submit"
+          className="onlineBtn"
+          onClick={() => handleOnlineConsultation(userId)}
+        >
           1:1 온라인 상담 예약
         </button>
-        <button type="submit" className="offlineBtn">
+        <button
+          type="submit"
+          className="offlineBtn"
+          onClick={() => handleReservation(userId)}
+        >
           대면 상담 예약
         </button>
       </div>
