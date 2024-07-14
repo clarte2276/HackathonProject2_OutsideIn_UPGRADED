@@ -1,5 +1,5 @@
 import React from 'react';
-import './CommonTable2.css';
+// import './CommonTable2.css';
 
 const CommonTable2 = (props) => {
   const { headersName, children } = props;
