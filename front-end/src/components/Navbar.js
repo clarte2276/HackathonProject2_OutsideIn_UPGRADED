@@ -75,7 +75,7 @@ function Navbar() {
             href="/process/chatpage"
             onClick={(e) => checkLogin(e, '/process/chatpage')}
           >
-            <img src={chat} alt="chat" width={60} />
+            <img src={chat} alt="chat" width={55} />
           </Link>
         </div>
       </div>

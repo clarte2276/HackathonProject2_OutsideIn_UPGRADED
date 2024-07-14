@@ -11,7 +11,7 @@
 }
 
 .active-button {
-  background-color: rgb(255, 0, 157);
+  background-color: #17499e;
   color: white;
 }
 
@@ -48,7 +48,7 @@
 .CreateButtonCommunity {
   text-decoration: none;
   color: white;
-  background-color: rgb(39, 39, 39);
+  background-color: #17499e;
   padding: 10px;
   border-radius: 10%;
 }
