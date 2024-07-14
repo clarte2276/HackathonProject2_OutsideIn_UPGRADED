@@ -22,6 +22,7 @@ import CreateJoy from './components/community/CRUD/CreateJoy.js';
 import ReadJoy from './components/community/CRUD/ReadJoy.js';
 import UpdateJoy from './components/community/CRUD/UpdateJoy.js';
 import CreateComment from './components/community/comments/CreateComment.js';
+import Chat from './components/chat/Chat.js';
 import Chatroom from './components/chat/Chatroom.js';
 
 function App() {
@@ -49,7 +50,8 @@ function App() {
             <Route path="/joy/PostView/:no" element={<ReadJoy />} />
             <Route path="/joy/Postview/:no/process/update" element={<UpdateJoy />} />
             <Route path="/joy/PostView/:postId/comments" element={<CreateComment />} />
-            <Route path="/chatroom" element={<Chatroom />} />
+            <Route path="/chat" element={<Chat />} />
+            <Route path="/Chatroom/:my_roomid/to/:roomId" element={<Chatroom />} />
           </Routes>
         </div>
         <Footer />

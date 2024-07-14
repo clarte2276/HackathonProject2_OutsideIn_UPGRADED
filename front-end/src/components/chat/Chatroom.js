@@ -3,77 +3,113 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import './Chatroom.css';
 
-function Chatroom() {
-  const { roomId } = useParams(); // roomId는 사실상 userId
+const Chatroom = () => {
+  const { my_roomid, roomId } = useParams();
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [roomMessages, setRoomMessages] = useState([]);
 
-  // 백앤드에서 메세지 가져오기
-  useEffect(() => {
-    const fetchMessages = async () => {
-      try {
-        const response = await axios.get(`/chatrooms/${roomId}/messages`);
+  // 주기적으로 메시지를 가져오는 함수
+  const fetchMessages = async () => {
+    try {
+      console.log(`Fetching messages for roomId: ${roomId}`);
+      const response = await axios.get(`/chatrooms/${my_roomid}/to/${roomId}/messages`);
+      console.log('Fetched messages:', response.data);
+      if (Array.isArray(response.data)) {
         setMessages(response.data);
-      } catch (error) {
-        console.error('Error fetching messages:', error);
+      } else {
+        console.error('Fetched data is not an array:', response.data);
       }
-    };
-    fetchMessages();
-  }, [roomId]);
-
-  const handleSendMessage = () => {
-    if (newMessage.trim() === '') return;
-
-    // 여기서는 테스트용으로 메시지를 바로 추가합니다. 실제로는 백엔드와 통신하여 메시지를 전송해야 합니다.
-    setMessages((prevMessages) => [
-      ...prevMessages,
-      {
-        content: newMessage,
-        isMyMessage: true, // 사용자가 보낸 메시지를 구분하기 위한 플래그
-      },
-    ]);
-    setNewMessage('');
+    } catch (error) {
+      console.error('Error fetching messages:', error);
+    }
   };
 
-  const MessageList = ({ messages }) => (
-    <div className="messages-list">
-      {messages.map((message, index) => (
-        <div key={index} className={message.isMyMessage ? 'my-message' : 'other-message'}>
-          {message.content}
-        </div>
-      ))}
-    </div>
-  );
+  useEffect(() => {
+    // 초기 메시지 로드
+    fetchMessages();
 
-  const MessageForm = ({ onSendMessage }) => {
-    const [message, setMessage] = useState('');
+    // 1초마다 fetchMessages 함수를 호출
+    const interval = setInterval(fetchMessages, 1000);
 
-    const handleSubmit = (event) => {
-      event.preventDefault();
-      onSendMessage(message);
-      setMessage('');
-    };
+    // 컴포넌트가 언마운트될 때 인터벌 정리
+    return () => clearInterval(interval);
+  }, [my_roomid, roomId]);
 
-    return (
-      <form className="message-form" onSubmit={handleSubmit}>
-        <input type="text" className="message-input" value={message} onChange={(e) => setMessage(e.target.value)} />
-        <button className="send-button" type="submit">
-          Send
-        </button>
-      </form>
-    );
+  useEffect(() => {
+    if (Array.isArray(messages) && messages.length) {
+      setRoomMessages(
+        messages.filter(
+          (msg) =>
+            (msg.receiver_id === parseInt(roomId) && msg.sender_id === parseInt(my_roomid)) ||
+            (msg.receiver_id === parseInt(my_roomid) && msg.sender_id === parseInt(roomId))
+        )
+      );
+    }
+  }, [messages, roomId, my_roomid]);
+
+  const handleSendMessage = async () => {
+    if (newMessage.trim() === '') return;
+    try {
+      const sender_id = parseInt(my_roomid);
+      const receiver_id = parseInt(roomId); // 현재 대화 상대방의 roomId로 사용됩니다.
+
+      console.log('Sending message:', {
+        sender_id,
+        receiver_id,
+        content: newMessage,
+      });
+
+      // 백엔드에 새 메시지 보내기
+      const response = await axios.post(`/chatrooms/${my_roomid}/to/${roomId}/messages`, {
+        sender_id,
+        receiver_id,
+        content: newMessage,
+      });
+
+      console.log('Response:', response);
+
+      // 메시지를 성공적으로 보낸 후 메시지 목록 업데이트
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        {
+          sender_id,
+          receiver_id,
+          content: newMessage,
+          isMyMessage: true,
+        },
+      ]);
+      setNewMessage('');
+    } catch (error) {
+      console.error('Error sending message:', error);
+    }
   };
 
   return (
-    <div className="chatRoom">
-      <h1>Chat App</h1>
-      <div className="chat-box">
-        <MessageList messages={messages} />
-        <MessageForm onSendMessage={handleSendMessage} />
+    <div className="chattingRoom">
+      <h2>
+        Chatroom {my_roomid} to {roomId}
+      </h2>
+      <div>
+        {roomMessages.map((msg, index) => (
+          <p key={index} className={msg.isMyMessage ? 'my-message' : 'other-message'}>
+            {msg.content}
+          </p>
+        ))}
       </div>
+      <div className="inputMessage">
+        <input
+          type="text"
+          value={newMessage}
+          onChange={(e) => setNewMessage(e.target.value)}
+          placeholder="메시지를 입력하세요..."
+        />
+      </div>
+      <button onClick={handleSendMessage} className="sendmessageBtn">
+        전송
+      </button>
     </div>
   );
-}
+};
 
 export default Chatroom;
