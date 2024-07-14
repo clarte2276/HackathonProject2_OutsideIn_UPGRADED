@@ -41,36 +41,27 @@ const Chat = ({ roomid, selectedRoomId, handleSelectRoom }) => {
     }
   };
 
+  const handleChatItemClick = (my_roomid, roomId) => {
+    handleSelectRoom(my_roomid, roomId);
+  };
+
   return (
     <>
       <div className="chatTop">
         <h1>Chat List</h1>
-        <div className="chatMain_body">이곳은 1:1 채팅 대기실입니다.</div>
       </div>
-      <div className="chat-container">
-        <CommonTable2 headersName={['닉네임', '상태']}>
-          {currentPosts.map((item, index) => (
-            <CommonTableRow2 key={index}>
-              <CommonTableColumn2>
-                <div className="img_name">
-                  <div className="user_nickname" onClick={() => handleSelectRoom(roomid, item.roomId)}>
-                    {item.nickname}
-                  </div>
-                </div>
-              </CommonTableColumn2>
-              <CommonTableColumn2>
-                <div className={getShadowClass(item.state)}>{item.state}</div>
-              </CommonTableColumn2>
-            </CommonTableRow2>
-          ))}
-        </CommonTable2>
-        {/* 채팅방 */}
-        {selectedRoomId && (
-          <div className="chatroom-container">
-            <Chatroom my_roomid={roomid} roomId={selectedRoomId} />
-          </div>
-        )}
-      </div>
+      <ul>
+        {currentPosts.map((item) => (
+          <li key={item.roomId}>
+            <button className="chat-item" onClick={() => handleChatItemClick(roomid, item.roomId)}>
+              <div className="img_name">
+                <span className="user_nickname">{item.nickname}</span>
+                <span className={`state_color ${getShadowClass(item.state)}`}>{item.state}</span>
+              </div>
+            </button>
+          </li>
+        ))}
+      </ul>
     </>
   );
 };
