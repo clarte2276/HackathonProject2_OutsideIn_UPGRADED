@@ -53,6 +53,7 @@ router.post("/process/login", (req, res) => {
               id: user.id,
               nickname: user.nickname,
               roomid: user.roomid, // room_id 추가
+              user_mode: user.user_mode, // 추가된 부분 유저모드
               authorized: true,
             };
             res.json({ success: true });
