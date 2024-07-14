@@ -177,108 +177,132 @@ function Mypage() {
 
   return (
     <div className="myPage">
-      <form onSubmit={handleSaveWrapper} className="userProfileForm">
-        {/* 첫 번째 컴포넌트 : 이미지 업로드/제거 */}
-        <div className="userProfileContainer">
-          <div className="userProfile">
-            <img className="mypageImg" src={profileImage} alt="프로필 이미지"></img>
-            <div className="userProfileBtn">
-              <button type="button" className="imgUplode">
-                이미지 업로드
-              </button>
-              <button type="button" className="imgDelete">
-                이미지 제거
-              </button>
+      <div>
+        <form onSubmit={handleSaveWrapper} className="userProfileForm">
+          {/* 첫 번째 컴포넌트 : 이미지 업로드/제거 */}
+          <div className="userProfileContainer">
+            <div className="userProfile">
+              <img className="mypageImg" src={profileImage} alt="프로필 이미지"></img>
+              <div className="userProfileBtn">
+                {/* <button type="button" className="imgUplode">
+                  이미지 업로드
+                </button>
+                <button type="button" className="imgDelete">
+                  이미지 제거
+                </button> */}
+              </div>
+            </div>
+            {/* 두 번째 컴포넌트 */}
+            <div className="userProfileInfo">
+              <div className="userProfileName">
+                <p>
+                  <div className="flexLayout">
+                    이름
+                    <input
+                      type="text"
+                      name="lastName"
+                      placeholder="이름"
+                      value={lastName}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                  <div className="flexLayout">
+                    성{' '}
+                    <input
+                      type="text"
+                      name="firstName"
+                      placeholder="성"
+                      value={firstName}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                </p>
+              </div>
+              <p>
+                <div className="userProfileNickname">
+                  <div className="flexLayout">
+                    닉네임
+                    <input
+                      type="text"
+                      name="usernickname"
+                      placeholder="닉네임"
+                      value={usernickname}
+                      onChange={handleInputChange}
+                    />
+                  </div>
+                </div>
+              </p>
             </div>
           </div>
-          {/* 두 번째 컴포넌트 */}
-          <div className="userProfileInfo">
-            <div className="userProfileName">
-              <p>
-                이름
-                <input type="text" name="lastName" placeholder="이름" value={lastName} onChange={handleInputChange} />
-              </p>
-              <p>
-                성{' '}
-                <input type="text" name="firstName" placeholder="성" value={firstName} onChange={handleInputChange} />
-              </p>
+          {/* 세 번째 컴포넌트 */}
+          <div className="userProfileAdditionalInfo centered">
+            <div className="additional12">
+              <div className="additional1">
+                <p className="a_id">
+                  아이디 <input type="text" placeholder="아이디" value={userId} disabled />
+                </p>
+                {/* 아이디 수정 불가능 */}
+                <p className="a_birth">
+                  생년월일
+                  <input
+                    type="text"
+                    name="birth"
+                    placeholder="생년월일(ex. 20240713)"
+                    value={birth}
+                    onChange={handleInputChange}
+                  />
+                </p>
+              </div>
+              <div className="additional2">
+                <p className="a_pw">
+                  비밀번호
+                  <input
+                    type="text"
+                    placeholder="비밀번호"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                </p>
+                <p className="a_gender">
+                  성별
+                  <Select
+                    className="genderAlt"
+                    options={genderOptions}
+                    value={genderOptions.find((option) => option.value === gender)}
+                    onChange={handleGenderChange}
+                    placeholder="성별"
+                    styles={customSelectStyles1}
+                    isClearable
+                  />
+                </p>
+              </div>
             </div>
-            <div className="userProfileNickname">
-              <p>
-                닉네임
-                <input
-                  type="text"
-                  name="usernickname"
-                  placeholder="닉네임"
-                  value={usernickname}
-                  onChange={handleInputChange}
-                />
-              </p>
-            </div>
-          </div>
-        </div>
-        {/* 세 번째 컴포넌트 */}
-        <div className="userProfileAdditionalInfo centered">
-          <div className="additional1">
-            <p className="a_id">
-              아이디 <input type="text" placeholder="아이디" value={userId} disabled />
-            </p>
-            {/* 아이디 수정 불가능 */}
-            <p className="a_pw">
-              비밀번호
-              <input
-                type="text"
-                placeholder="비밀번호"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </p>
-          </div>
-          <div className="additional2">
             <p>
-              생년월일
-              <input
-                type="text"
-                name="birth"
-                placeholder="생년월일(ex. 20240713)"
-                value={birth}
-                onChange={handleInputChange}
-              />
+              <div className="additional3">
+                지금 상태는{' '}
+                <Select
+                  className="stateAlt"
+                  options={stateOptions}
+                  value={stateOptions.find((option) => option.value === state)}
+                  onChange={handleStateChange}
+                  placeholder="나의 상태는 ~입니다."
+                  styles={customSelectStyles2}
+                  isClearable
+                />
+              </div>
             </p>
-            성별
-            <Select
-              className="genderAlt"
-              options={genderOptions}
-              value={genderOptions.find((option) => option.value === gender)}
-              onChange={handleGenderChange}
-              placeholder="성별"
-              styles={customSelectStyles1}
-              isClearable
-            />
           </div>
-          <div className="additional3">
-            지금 상태는{' '}
-            <Select
-              className="stateAlt"
-              options={stateOptions}
-              value={stateOptions.find((option) => option.value === state)}
-              onChange={handleStateChange}
-              placeholder="나의 상태는 ~입니다."
-              styles={customSelectStyles2}
-              isClearable
-            />
+          {/* 네 번째 컴포넌트 */}
+          <div className="centered">
+            <button type="submit" className="saveBtn">
+              저장
+            </button>
+            <button type="button" className="logoutBtn" onClick={handleLogout}>
+              로그아웃
+            </button>
           </div>
-        </div>
-        {/* 네 번째 컴포넌트 */}
-        <div className="centered">
-          <button type="submit" className="saveBtn">
-            저장
-          </button>
-          <button type="button" className="logoutBtn" onClick={handleLogout}>
-            로그아웃
-          </button>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
   );
 }
