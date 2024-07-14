@@ -14,8 +14,8 @@
 }
 
 .List_title {
-  text-align: left;
-  color: rgb(48, 145, 6);
+  /* text-align: left; */
+  color: #347988;
 }
 
 .PaginationCustom {
