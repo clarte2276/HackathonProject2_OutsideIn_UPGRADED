@@ -15,6 +15,26 @@ router.get("/check-login", (req, res) => {
   }
 });
 
+router.post("/hospital", (req, res) => {
+  if (!req.session.user) {
+    return res.status(401).send("로그인이 필요합니다.");
+  }
+  const currentUserID = req.session.user.id;
+  pool.query(
+    "SELECT id, nickname FROM users WHERE id != ?",
+    [currentUserID],
+    (error, results) => {
+      if (error) {
+        console.error(error);
+        res.status(500).send("서버 오류");
+      } else {
+        console.log(results); // 응답 데이터 확인을 위한 로그 추가
+        res.json(results);
+      }
+    }
+  );
+});
+
 // 로그아웃 구현
 router.post("/logout", (req, res) => {
   req.session.destroy((err) => {

@@ -55,6 +55,7 @@ const processRoutes = require("./function/process");
 const communityRoutes = require("./function/community");
 const chatsRoutes = require("./function/chats");
 const commentsRoutes = require("./function/comments");
+const reservation = require("./function/reservation");
 const kakaoRoutes = require("./function/kakao_login");
 
 app.use("/", mypageRoutes);
@@ -63,6 +64,7 @@ app.use("/", processRoutes);
 app.use("/", communityRoutes);
 app.use("/", chatsRoutes);
 app.use("/", commentsRoutes);
+app.use("/", reservation);
 app.use("/", kakaoRoutes);
 
 //모든 요청은 build/index.html로
