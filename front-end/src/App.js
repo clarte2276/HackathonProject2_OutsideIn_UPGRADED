@@ -24,6 +24,8 @@ import UpdateJoy from './components/community/CRUD/UpdateJoy.js';
 import CreateComment from './components/community/comments/CreateComment.js';
 import Chat from './components/chat/Chat.js';
 import Chatroom from './components/chat/Chatroom.js';
+import Chatpage from './components/chat/mainChat.js';
+import MainChat from './components/chat/mainChat.js';
 
 function App() {
   return (
@@ -52,6 +54,7 @@ function App() {
             <Route path="/joy/PostView/:postId/comments" element={<CreateComment />} />
             <Route path="/process/chat" element={<Chat />} />
             <Route path="/Chatroom/:my_roomid/to/:roomId" element={<Chatroom />} />
+            <Route path="/process/chatpage" element={<Chatpage />} />
           </Routes>
         </div>
         <Footer />

@@ -1,0 +1,36 @@
+.chatmainpage {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding: 3%;
+}
+
+.mainChatContainer {
+  display: flex;
+  right: 0;
+}
+
+.chatListContainer {
+  display: flex;
+  flex-direction: column;
+  left: 0;
+  width: 35%;
+  border: 1px solid black;
+  margin-right: 0.5%;
+}
+
+.chatRoomContainer {
+  width: 70%;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid black;
+}
+
+.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #999;
+}

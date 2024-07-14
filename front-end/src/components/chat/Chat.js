@@ -2,44 +2,15 @@ import React, { useState, useEffect } from 'react';
 import CommonTable2 from './chatList/CommonTable2';
 import CommonTableColumn2 from './chatList/CommonTableColumn2';
 import CommonTableRow2 from './chatList/CommonTableRow2';
-import CustomPagination from './chatList/Pagination';
 import './Chat.css';
+import Chatroom from './Chatroom.js';
 import axios from 'axios';
-import { openChatroomPopup } from './Chatpopup';
-import useUserData from '../useUserData';
 import { useNavigate } from 'react-router-dom';
 
-const Chat = () => {
-  const navigate = useNavigate();
-  const {
-    firstName,
-    lastName,
-    usernickname,
-    birth,
-    gender,
-    userId,
-    password,
-    state,
-    roomid,
-    setFirstName,
-    setLastName,
-    setUsernickname,
-    setBirth,
-    setGender,
-    setUserId,
-    setPassword,
-    setState,
-    setroomid,
-    fetchUserData,
-  } = useUserData();
-
+const Chat = ({ roomid, selectedRoomId, handleSelectRoom }) => {
   const [dataList, setDataList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 5;
-
-  useEffect(() => {
-    fetchUserData();
-  }, []);
 
   useEffect(() => {
     axios
@@ -56,26 +27,6 @@ const Chat = () => {
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
   const currentPosts = Array.isArray(dataList) ? dataList.slice(indexOfFirstPost, indexOfLastPost) : [];
-
-  const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
-  };
-
-  const openPopup = (my_roomid, roomId) => {
-    if (!my_roomid) {
-      console.error('My Room ID is not defined');
-      return;
-    }
-
-    // 팝업 url 여기서 설정 후 불러와야함
-    const url = `/Chatroom/${my_roomid}/to/${roomId}`;
-    const title = 'popup';
-    const options = 'toolbar=no,scrollbars=no,resizable=yes,status=no,menubar=no,width=400,height=500,top=100,left=200';
-    window.open(url, title, options);
-
-    // console.log(my_roomid);
-    // openChatroomPopup(my_roomid, roomId);
-  };
 
   const getShadowClass = (state) => {
     switch (state) {
@@ -94,34 +45,31 @@ const Chat = () => {
     <>
       <div className="chatTop">
         <h1>Chat List</h1>
-        <div className="chatMain_body">이곳은 1:1 채팅 목록입니다.</div>
-        <div>대화에 참여해 새로운 만남을 경험해 보세요!</div>
+        <div className="chatMain_body">이곳은 1:1 채팅 대기실입니다.</div>
       </div>
-      <CommonTable2 headersName={['닉네임', '상태', '대화하기']}>
-        {currentPosts.map((item, index) => (
-          <CommonTableRow2 key={index}>
-            <CommonTableColumn2>
-              <div className="img_name">
-                <div>{item.nickname}</div>
-              </div>
-            </CommonTableColumn2>
-            <CommonTableColumn2>
-              <div className={getShadowClass(item.state)}>{item.state}</div>
-            </CommonTableColumn2>
-            <CommonTableColumn2>
-              <button className="ChatIn" onClick={() => openPopup(roomid, item.roomId)}>
-                <div>참여</div>
-              </button>
-            </CommonTableColumn2>
-          </CommonTableRow2>
-        ))}
-      </CommonTable2>
-      <div className="pagination">
-        <CustomPagination
-          currentPage={currentPage}
-          totalPages={Math.ceil(dataList.length / postsPerPage)}
-          onPageChange={handlePageChange}
-        />
+      <div className="chat-container">
+        <CommonTable2 headersName={['닉네임', '상태']}>
+          {currentPosts.map((item, index) => (
+            <CommonTableRow2 key={index}>
+              <CommonTableColumn2>
+                <div className="img_name">
+                  <div className="user_nickname" onClick={() => handleSelectRoom(roomid, item.roomId)}>
+                    {item.nickname}
+                  </div>
+                </div>
+              </CommonTableColumn2>
+              <CommonTableColumn2>
+                <div className={getShadowClass(item.state)}>{item.state}</div>
+              </CommonTableColumn2>
+            </CommonTableRow2>
+          ))}
+        </CommonTable2>
+        {/* 채팅방 */}
+        {selectedRoomId && (
+          <div className="chatroom-container">
+            <Chatroom my_roomid={roomid} roomId={selectedRoomId} />
+          </div>
+        )}
       </div>
     </>
   );

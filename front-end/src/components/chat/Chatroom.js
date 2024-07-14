@@ -19,6 +19,13 @@ const Chatroom = () => {
         setMessages(response.data);
       } else {
         console.error('Fetched data is not an array:', response.data);
+        // 메세지를 받아올 때 isMyMessage 속성 설정
+        const processedMessages = response.data.map((msg) => ({
+          ...msg,
+          isMyMessage: msg.receiver_id === parseInt(roomId) && msg.sender_id === parseInt(my_roomid),
+        }));
+
+        setMessages(processedMessages);
       }
     } catch (error) {
       console.error('Error fetching messages:', error);
@@ -69,16 +76,32 @@ const Chatroom = () => {
 
       console.log('Response:', response);
 
+      //     // 메시지를 성공적으로 보낸 후 메시지 목록 업데이트
+      //     setMessages((prevMessages) => [
+      //       ...prevMessages,
+      //       {
+      //         sender_id,
+      //         receiver_id,
+      //         content: newMessage,
+      //         isMyMessage: true,
+      //       },
+      //     ]);
+      //     setNewMessage('');
+      //   } catch (error) {
+      //     console.error('Error sending message:', error);
+      //   }
+      // };
+
       // 메시지를 성공적으로 보낸 후 메시지 목록 업데이트
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        {
-          sender_id,
-          receiver_id,
-          content: newMessage,
-          isMyMessage: true,
-        },
-      ]);
+      const newMsg = {
+        sender_id,
+        receiver_id,
+        content: newMessage,
+        isMyMessage: true,
+      };
+
+      // 기존 메시지에 추가하지 않고 새 배열로 설정하여 유지
+      setMessages((prevMessages) => [...prevMessages, newMsg]);
       setNewMessage('');
     } catch (error) {
       console.error('Error sending message:', error);
@@ -87,27 +110,26 @@ const Chatroom = () => {
 
   return (
     <div className="chattingRoom">
-      <h2>
-        Chatroom {my_roomid} to {roomId}
-      </h2>
-      <div>
+      <div className="chatroom-messages">
         {roomMessages.map((msg, index) => (
-          <p key={index} className={msg.isMyMessage ? 'my-message' : 'other-message'}>
-            {msg.content}
-          </p>
+          <div key={index} className={msg.isMyMessage ? 'my-message-container' : 'other-message-container'}>
+            <p className={msg.isMyMessage ? 'my-message' : 'other-message'}>{msg.content}</p>
+          </div>
         ))}
       </div>
-      <div className="inputMessage">
-        <input
-          type="text"
-          value={newMessage}
-          onChange={(e) => setNewMessage(e.target.value)}
-          placeholder="메시지를 입력하세요..."
-        />
+      <div className="msgsendItem">
+        <div className="inputMessage">
+          <input
+            type="text"
+            value={newMessage}
+            onChange={(e) => setNewMessage(e.target.value)}
+            placeholder="Typing your message"
+          />
+        </div>
+        <button onClick={handleSendMessage} className="sendmessageBtn">
+          Send
+        </button>
       </div>
-      <button onClick={handleSendMessage} className="sendmessageBtn">
-        전송
-      </button>
     </div>
   );
 };
