@@ -1,15 +1,37 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import CommonTable2 from './chatList/CommonTable2';
 import CommonTableColumn2 from './chatList/CommonTableColumn2';
 import CommonTableRow2 from './chatList/CommonTableRow2';
-import CustomPagination from '../board/Pagination';
-import { useNavigate } from 'react-router-dom';
+import CustomPagination from './chatList/Pagination';
+import './Chat.css';
 import axios from 'axios';
-import Chatroom from './Chatroom';
+import { openChatroomPopup } from './Chatpopup';
+import useUserData from '../useUserData';
+import { useNavigate } from 'react-router-dom';
 
 const Chat = () => {
   const navigate = useNavigate();
-  const { roomid, fetchUserData } = useUserData();
+  const {
+    firstName,
+    lastName,
+    usernickname,
+    birth,
+    gender,
+    userId,
+    password,
+    state,
+    roomid,
+    setFirstName,
+    setLastName,
+    setUsernickname,
+    setBirth,
+    setGender,
+    setUserId,
+    setPassword,
+    setState,
+    setroomid,
+    fetchUserData,
+  } = useUserData();
 
   const [dataList, setDataList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -71,8 +93,8 @@ const Chat = () => {
   return (
     <>
       <div className="chatTop">
-        <h1>채팅 대기실</h1>
-        <div className="chatMain_body">이곳은 1:1 채팅 대기실입니다.</div>
+        <h1>Chat List</h1>
+        <div className="chatMain_body">이곳은 1:1 채팅 목록입니다.</div>
         <div>대화에 참여해 새로운 만남을 경험해 보세요!</div>
       </div>
       <CommonTable2 headersName={['닉네임', '상태', '대화하기']}>
@@ -80,7 +102,6 @@ const Chat = () => {
           <CommonTableRow2 key={index}>
             <CommonTableColumn2>
               <div className="img_name">
-                <img className="userImg" src={userImg} alt=""></img>
                 <div>{item.nickname}</div>
               </div>
             </CommonTableColumn2>

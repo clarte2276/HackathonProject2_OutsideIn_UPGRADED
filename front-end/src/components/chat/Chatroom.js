@@ -30,7 +30,7 @@ const Chatroom = () => {
     fetchMessages();
 
     // 1초마다 fetchMessages 함수를 호출
-    const interval = setInterval(fetchMessages, 1000);
+    const interval = setInterval(fetchMessages, 100);
 
     // 컴포넌트가 언마운트될 때 인터벌 정리
     return () => clearInterval(interval);

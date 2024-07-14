@@ -50,7 +50,7 @@ function App() {
             <Route path="/joy/PostView/:no" element={<ReadJoy />} />
             <Route path="/joy/Postview/:no/process/update" element={<UpdateJoy />} />
             <Route path="/joy/PostView/:postId/comments" element={<CreateComment />} />
-            <Route path="/chat" element={<Chat />} />
+            <Route path="/process/chat" element={<Chat />} />
             <Route path="/Chatroom/:my_roomid/to/:roomId" element={<Chatroom />} />
           </Routes>
         </div>
