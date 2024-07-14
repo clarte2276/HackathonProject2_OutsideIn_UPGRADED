@@ -1,6 +1,6 @@
 .chatmainpage {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   padding: 3%;
@@ -13,23 +13,23 @@
 
 .iframe-container {
   width: 100%;
-  height: 400px;
+  height: 500px;
+  border: 2px solid #b6bec6;
 }
 
 .chatListContainer {
   display: flex;
   flex-direction: column;
+  width: 30%;
   left: 0;
-  width: 35%;
-  border: 2px solid #b6bec6;
-  margin-right: 0.5%;
 }
 
 .chatRoomContainer {
-  width: 70%;
   display: flex;
   flex-direction: column;
   border: 2px solid #b6bec6;
+  width: 70%;
+  margin-left: 15px;
 }
 
 .placeholder {
@@ -38,4 +38,6 @@
   justify-content: center;
   height: 100%;
   color: #999;
+  padding: 5%;
+  font-size: 1rem;
 }

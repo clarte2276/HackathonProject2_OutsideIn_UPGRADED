@@ -16,7 +16,6 @@ const Chat = ({ roomid, selectedRoomId, handleSelectRoom }) => {
     axios
       .post('/process/chat')
       .then((response) => {
-        console.log(response.data);
         setDataList(response.data);
       })
       .catch((error) => {
@@ -42,7 +41,8 @@ const Chat = ({ roomid, selectedRoomId, handleSelectRoom }) => {
   };
 
   const handleChatItemClick = (my_roomid, roomId) => {
-    handleSelectRoom(my_roomid, roomId);
+    window.parent.postMessage({ roomId }, '*');
+    // handleSelectRoom(my_roomid, roomId);
   };
 
   return (
@@ -53,11 +53,12 @@ const Chat = ({ roomid, selectedRoomId, handleSelectRoom }) => {
       <ul>
         {currentPosts.map((item) => (
           <li key={item.roomId}>
+            <div className="img_name">
+              <span className="user_nickname">{item.nickname}</span>
+              <span className={`state_color ${getShadowClass(item.state)}`}>{item.state}</span>
+            </div>
             <button className="chat-item" onClick={() => handleChatItemClick(roomid, item.roomId)}>
-              <div className="img_name">
-                <span className="user_nickname">{item.nickname}</span>
-                <span className={`state_color ${getShadowClass(item.state)}`}>{item.state}</span>
-              </div>
+              채팅
             </button>
           </li>
         ))}
