@@ -70,7 +70,7 @@ function Navbar() {
       </div>
       <div className="chat">
         <div>
-          <img src={chat} alt="chat" width={60} />
+          <img src={chat} alt="chat" width={55} />
         </div>
       </div>
     </div>
