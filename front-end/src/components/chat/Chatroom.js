@@ -1,9 +1,26 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
 import './Chatroom.css';
 
 function Chatroom() {
+  const { roomId } = useParams(); // roomId는 사실상 userId
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
+  const [roomMessages, setRoomMessages] = useState([]);
+
+  // 백앤드에서 메세지 가져오기
+  useEffect(() => {
+    const fetchMessages = async () => {
+      try {
+        const response = await axios.get(`/chatrooms/${roomId}/messages`);
+        setMessages(response.data);
+      } catch (error) {
+        console.error('Error fetching messages:', error);
+      }
+    };
+    fetchMessages();
+  }, [roomId]);
 
   const handleSendMessage = () => {
     if (newMessage.trim() === '') return;
