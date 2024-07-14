@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './App.css';
 
@@ -22,6 +22,9 @@ import CreateJoy from './components/community/CRUD/CreateJoy.js';
 import ReadJoy from './components/community/CRUD/ReadJoy.js';
 import UpdateJoy from './components/community/CRUD/UpdateJoy.js';
 import CreateComment from './components/community/comments/CreateComment.js';
+import CreateNotice from './components/community/CRUD/CreateNotice.js';
+import ReadNotice from './components/community/CRUD/ReadNotice.js';
+import UpdateNotice from './components/community/CRUD/UpdateNotice.js';
 
 function App() {
   return (
@@ -48,6 +51,9 @@ function App() {
             <Route path="/joy/PostView/:no" element={<ReadJoy />} />
             <Route path="/joy/Postview/:no/process/update" element={<UpdateJoy />} />
             <Route path="/joy/PostView/:postId/comments" element={<CreateComment />} />
+            <Route path="/notice/process/new_Post" element={<CreateNotice />} />
+            <Route path="/notice/PostView/:no" element={<ReadNotice />} />
+            <Route path="/notice/Postview/:no/process/update" element={<UpdateNotice />} />
           </Routes>
         </div>
         <Footer />
