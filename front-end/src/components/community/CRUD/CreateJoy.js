@@ -51,27 +51,46 @@ function CreateJoy() {
   };
 
   return (
-    <>
+    <div className="Create_all">
       <div>
-        <CRUDHeader title="기쁨이 글쓰기" />
+        <div className="header_layout">
+          <CRUDHeader title="기쁨이 글쓰기" />
+        </div>
+        <form onSubmit={saveBoard}>
+          <div className="titleBody_layout">
+            <div>
+              <p>
+                <span className="titleBody_name">제목</span>
+              </p>
+              <input
+                className="titleInput"
+                type="text"
+                name="title"
+                placeholder="제목을 입력하세요"
+                value={title}
+                onChange={onChange}
+              />
+            </div>
+          </div>
+          <br />
+          <div className="titleBody_layout">
+            <div>
+              <p>
+                <span className="titleBody_name">내용</span>
+              </p>
+              <textarea name="body" placeholder="내용을 입력하세요" value={body} onChange={onChange}></textarea>
+            </div>
+          </div>
+          <br />
+          <div className="btn_layout">
+            <button className="backBtn" type="button" onClick={backToList}>
+              취소
+            </button>
+            <input className="CreateBtn" type="submit" value="등록하기"></input>
+          </div>
+        </form>
       </div>
-      <form onSubmit={saveBoard}>
-        <div>
-          <span>제목</span>
-          <input type="text" name="title" placeholder="제목" value={title} onChange={onChange} />
-        </div>
-        <br />
-        <div>
-          <span>내용</span>
-          <textarea name="body" placeholder="내용" value={body} onChange={onChange}></textarea>
-        </div>
-        <br />
-        <button type="button" onClick={backToList}>
-          취소
-        </button>
-        <input type="submit" value="등록하기"></input>
-      </form>
-    </>
+    </div>
   );
 }
 
