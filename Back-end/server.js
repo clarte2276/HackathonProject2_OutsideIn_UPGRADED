@@ -7,13 +7,6 @@ const MySQLStore = require("express-mysql-session")(session);
 const db_config = require("./config/db_config.json");
 const app = express();
 const cors = require("cors");
-const http = require("http");
-const socketIo = require("socket.io");
-
-// HTTP 서버 초기화
-const server = http.createServer(app);
-// socket.io 초기화
-const io = socketIo(server);
 
 // MySQL 세션 스토어 옵션
 const sessionStoreOptions = {
@@ -77,41 +70,7 @@ app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "../Front-end/build", "index.html"));
 });
 
-// socket.io 연결 핸들러
-io.on("connection", (socket) => {
-  console.log("A user connected");
-
-  socket.on("joinRoom", (roomId) => {
-    socket.join(roomId);
-    console.log(`User joined room: ${roomId}`);
-  });
-
-  socket.on("sendMessage", (message) => {
-    const { sender_id, receiver_id, content } = message;
-    pool.query(
-      "INSERT INTO messages (sender_id, receiver_id, content) VALUES (?, ?, ?)",
-      [sender_id, receiver_id, content],
-      (error, results) => {
-        if (error) {
-          console.error("Message save error:", error);
-          return;
-        }
-        io.to(receiver_id).emit("receiveMessage", { sender_id, content });
-      }
-    );
-  });
-
-  socket.on("disconnect", () => {
-    console.log("User disconnected");
-  });
-});
-
 // 서버 시작
-server.listen(3000, () => {
+app.listen(3000, () => {
   console.log("서버가 3000 포트에서 실행 중입니다.");
 });
-
-
-// app.listen(3000, () => {
-//   console.log("서버가 3000 포트에서 실행 중입니다.");
-// });

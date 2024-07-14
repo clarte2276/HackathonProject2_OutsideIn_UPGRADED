@@ -8,7 +8,7 @@ const pool = mysql.createPool(db_config);
 
 // 관리자 계정 확인 미들웨어
 const checkAdmin = (req, res, next) => {
-  if (req.session && req.session.user && req.session.user.id === "admin") {
+  if (req.session && req.session.user && req.session.user.user_mode === 0) {
     next();
   } else {
     res.status(403).send("Not Admin");
