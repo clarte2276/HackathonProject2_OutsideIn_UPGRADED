@@ -57,6 +57,7 @@ const chatsRoutes = require("./function/chats");
 const commentsRoutes = require("./function/comments");
 const reservation = require("./function/reservation");
 const kakaoRoutes = require("./function/kakao_login");
+const hoschatRoutes = require("./function/hoschat");
 
 app.use("/", mypageRoutes);
 app.use("/", loginRoutes);
@@ -66,6 +67,7 @@ app.use("/", chatsRoutes);
 app.use("/", commentsRoutes);
 app.use("/", reservation);
 app.use("/", kakaoRoutes);
+app.use("/", hoschatRoutes);
 
 //모든 요청은 build/index.html로
 app.get("*", (req, res) => {
