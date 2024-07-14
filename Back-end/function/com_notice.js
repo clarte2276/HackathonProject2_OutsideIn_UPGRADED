@@ -157,7 +157,7 @@ router.get("/CommunityWrite", checkAdmin, (req, res) => {
 });
 
 // 공지 게시판 글쓰기 등록-> 관리자만 접근
-router.post("/CommunityWrite", checkAdmin, (req, res) => {
+router.post("/process/new_Post", checkAdmin, (req, res) => {
   const { title, content } = req.body;
   const nickname = req.session.user.nickname;
   const createdDate = moment().format("YYYY-MM-DD HH:mm:ss");
@@ -182,12 +182,12 @@ router.post("/PostView/:no", (req, res) => {
 });
 
 // 공지 게시글 삭제
-router.post("/delete/:no", checkAdmin, (req, res) =>
+router.post("/Postview/:no/process/delete", checkAdmin, (req, res) =>
   deletePost("notice", req.params.no, req, res, "/notice")
 );
 
 // 공지 게시글 수정 load
-router.get("/update/:no", checkAdmin, async (req, res, next) => {
+router.get("/Postview/:no/process/update", checkAdmin, async (req, res, next) => {
   try {
     const [results] = await pool
       .promise()
@@ -212,7 +212,7 @@ router.get("/update/:no", checkAdmin, async (req, res, next) => {
 });
 
 // 공지 게시글 수정 등록
-router.post("/update/:no", checkAdmin, (req, res) => {
+router.post("/PostView/:no/process/update/", checkAdmin, (req, res) => {
   const { title, content, created_date } = req.body;
   updatePost(
     "notice",
