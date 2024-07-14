@@ -28,7 +28,13 @@ function CreateComment({ postId, onCommentSubmit }) {
   return (
     <form onSubmit={handleSubmit}>
       <div>
-        <textarea name="content" placeholder="댓글을 남겨보세요" value={content} onChange={handleChange}></textarea>
+        <textarea
+          className="commentInput"
+          name="content"
+          placeholder="댓글을 남겨보세요"
+          value={content}
+          onChange={handleChange}
+        ></textarea>
       </div>
       <div>
         <input type="submit" value="등록"></input>

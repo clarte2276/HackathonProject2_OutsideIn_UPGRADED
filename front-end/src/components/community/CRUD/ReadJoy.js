@@ -3,6 +3,7 @@ import { Link, useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import CRUDHeader from './CRUDHeader';
 import CreateComment from '../comments/CreateComment';
+import community from '../../images/community.png';
 import './CRUD.css';
 
 function ReadJoy() {
@@ -78,46 +79,56 @@ function ReadJoy() {
   const { title, nickname, created_date, content } = post;
 
   return (
-    <div className="post-container">
-      <CRUDHeader title="기쁨이 게시판" />
-      <div>{title}</div>
-      <div className="infoUpdateDelete">
-        <div className="info">
-          <div>프사</div>
-          <div>{nickname}</div>
-          <div>{created_date}</div>
+    <div className="Read_all">
+      <div>
+        <div className="header_layout">
+          <CRUDHeader title="기쁨이 게시판" />
         </div>
-        <div className="updateDelete">
-          <Link to={`/joy/Postview/${no}/process/update`}>수정</Link>
-          <div onClick={handleDelete} style={{ cursor: 'pointer' }}>
-            삭제
+        <div className="ReadTitle">{title}</div>
+        <div className="infoUpdateDelete">
+          <div className="info">
+            <div>프사</div>
+            <div>{nickname}</div>
+            <div>{created_date}</div>
+          </div>
+          <div className="updateDelete">
+            <Link to={`/joy/Postview/${no}/process/update`}>수정</Link>
+            <div onClick={handleDelete} style={{ cursor: 'pointer' }}>
+              삭제
+            </div>
           </div>
         </div>
-      </div>
-      <div>
-        <p>HOPINFO는 서로의 아픔을 공감하고 위로하는 커뮤니티입니다.</p>
-        <p>회원들끼리 서로 존중하고, 응원과 조언을 아끼지 않는 자랑스러운 회원이 되도록 합시다.</p>
-      </div>
-      <div>{content}</div>
-      <div>
-        <div>로고</div>
-        <div>댓글</div>
-      </div>
-      <div>
-        {comments.length > 0 ? (
-          comments.map((comment) => (
-            <div key={comment.comment_no}>
-              <div>{comment.nickname}</div>
-              <div>{comment.content}</div>
-              <div>{comment.created_date}</div>
-            </div>
-          ))
-        ) : (
-          <div>댓글이 없습니다.</div>
-        )}
-      </div>
-      <div>
-        <CreateComment postId={no} onCommentSubmit={handleCommentSubmit} />
+        <div className="explainText">
+          <p>HOPINFO는 서로의 아픔을 공감하고 위로하는 커뮤니티입니다.</p>
+          <p>회원들끼리 서로 존중하고, 응원과 조언을 아끼지 않는 자랑스러운 회원이 되도록 합시다.</p>
+        </div>
+        <div className="ReadContent">{content}</div>
+        <div className="commontLogo">
+          <img src={community} alt="커뮤니티 로고" width={27} height={26} />
+          <div>댓글</div>
+        </div>
+        <div>
+          {comments.length > 0 ? (
+            comments.map((comment) => (
+              <div className="comment_all" key={comment.comment_no}>
+                <div>
+                  <div>프사</div>
+                </div>
+                <div>
+                  <div className="commentNickname">{comment.nickname}</div>
+                  <div>{comment.content}</div>
+                  <div className="commentDate">{comment.created_date}</div>
+                </div>
+              </div>
+            ))
+          ) : (
+            <div>댓글이 없습니다.</div>
+          )}
+        </div>
+        <div>
+          <div>내 닉네임</div>
+          <CreateComment postId={no} onCommentSubmit={handleCommentSubmit} />
+        </div>
       </div>
     </div>
   );

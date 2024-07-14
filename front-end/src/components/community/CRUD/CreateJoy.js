@@ -78,7 +78,13 @@ function CreateJoy() {
               <p>
                 <span className="titleBody_name">내용</span>
               </p>
-              <textarea name="body" placeholder="내용을 입력하세요" value={body} onChange={onChange}></textarea>
+              <textarea
+                className="BodyInput"
+                name="body"
+                placeholder="내용을 입력하세요"
+                value={body}
+                onChange={onChange}
+              ></textarea>
             </div>
           </div>
           <br />
