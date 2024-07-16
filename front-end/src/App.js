@@ -22,6 +22,12 @@ import CreateJoy from './components/community/CRUD/CreateJoy.js';
 import ReadJoy from './components/community/CRUD/ReadJoy.js';
 import UpdateJoy from './components/community/CRUD/UpdateJoy.js';
 import CreateComment from './components/community/comments/CreateComment.js';
+import CreateNotice from './components/community/CRUD/CreateNotice.js';
+import ReadNotice from './components/community/CRUD/ReadNotice.js';
+import UpdateNotice from './components/community/CRUD/UpdateNotice.js';
+import Chat from './components/chat/Chat.js';
+import Chatroom from './components/chat/Chatroom.js';
+import Chatpage from './components/chat/mainChat.js';
 
 function App() {
   return (
