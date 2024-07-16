@@ -32,11 +32,11 @@ const executeQuery = (query, params, res, callback) => {
   });
 };
 
-// 게시판 검색 기능
+// 게시판 검색 기능 //제목, 내용, 작성자 검색 가능
 const searchBoard = (boardType, keyword, res) => {
-  const query = `SELECT no, title, nickname, content, DATE_FORMAT(created_date, '%Y년 %m월 %d일 %H시 %i분') AS created_date FROM community WHERE board_type = ? AND (title LIKE ? OR content LIKE ?)`;
+  const query = `SELECT no, title, nickname, content, DATE_FORMAT(created_date, '%Y년 %m월 %d일 %H시 %i분') AS created_date FROM community WHERE board_type = ? AND (title LIKE ? OR content LIKE ? OR nickname LIKE ?)`;
   const searchKeyword = `%${keyword}%`;
-  executeQuery(query, [boardType, searchKeyword, searchKeyword], res, (results) => {
+  executeQuery(query, [boardType, searchKeyword, searchKeyword, searchKeyword], res, (results) => {
     if (results.length === 0) {
       res.status(404).json({ message: '검색된 게시물이 없습니다.' });
     } else {
