@@ -10,7 +10,9 @@ function UpdateJoy() {
   const [post, setPost] = useState({
     title: '',
     body: '',
+    file_data: null,
   });
+  const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [canEdit, setCanEdit] = useState(false);
@@ -19,8 +21,8 @@ function UpdateJoy() {
     axios
       .get(`/joy/Postview/${no}/process/update`)
       .then((response) => {
-        const { title, content } = response.data;
-        setPost({ title, body: content });
+        const { title, content, file_data } = response.data;
+        setPost({ title, body: content, file_data });
         setLoading(false);
         setCanEdit(true);
       })
@@ -38,17 +40,33 @@ function UpdateJoy() {
 
   const onChange = (event) => {
     const { value, name } = event.target;
-    console.log(`name: ${name}, value: ${value}`);
     setPost({
       ...post,
       [name]: value,
     });
   };
 
+  const onFileChange = (event) => {
+    setFile(event.target.files[0]);
+  };
+
   const updatePost = async (event) => {
     event.preventDefault();
+
+    const formData = new FormData();
+    formData.append('title', post.title);
+    formData.append('content', post.body);
+    if (file) {
+      formData.append('file', file);
+    }
+
     try {
-      await axios.post(`/joy/Postview/${no}/process/update`, { title: post.title, content: post.body });
+      await axios.post(`/joy/Postview/${no}/process/update`, formData, {
+        withCredentials: true,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
       alert('수정되었습니다.');
       navigate(`/joy/PostView/${no}`);
     } catch (error) {
@@ -74,7 +92,7 @@ function UpdateJoy() {
     return <div>{error}</div>;
   }
   if (!canEdit) {
-    return <div>수정 권한이 없습니다.</div>; // 수정 권한이 없을 때 보여줄 내용
+    return <div>수정 권한이 없습니다.</div>;
   }
 
   return (
@@ -91,6 +109,19 @@ function UpdateJoy() {
         <div>
           <span>내용</span>
           <textarea name="body" placeholder="내용" value={post.body} onChange={onChange}></textarea>
+        </div>
+        <br />
+        <div>
+          <span>현재 업로드된 파일</span>
+          {post.file_data ? (
+            <img src={`data:image/jpeg;base64,${post.file_data}`} alt="Current Upload" width="200" />
+          ) : (
+            <p>업로드된 파일이 없습니다.</p>
+          )}
+        </div>
+        <div>
+          <span>새로운 파일 업로드</span>
+          <input type="file" onChange={onFileChange} />
         </div>
         <br />
         <button type="button" onClick={backToList}>

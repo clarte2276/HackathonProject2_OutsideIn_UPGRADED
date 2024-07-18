@@ -13,6 +13,7 @@ function ReadJoy() {
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [imageSrc, setImageSrc] = useState('');
 
   useEffect(() => {
     // 백엔드에서 게시글과 댓글 목록을 가져옴
@@ -23,6 +24,20 @@ function ReadJoy() {
 
         const commentsResponse = await axios.get(`/joy/comments/${no}`);
         setComments(commentsResponse.data);
+
+        // 이미지 로드
+        if (postResponse.data.post.file_data) {
+          const imageResponse = await axios.get(`/community/image/${no}`, {
+            responseType: 'arraybuffer',
+          });
+          const base64 = btoa(
+            new Uint8Array(imageResponse.data).reduce(
+              (data, byte) => data + String.fromCharCode(byte),
+              '',
+            ),
+          );
+          setImageSrc(`data:image/jpeg;base64,${base64}`);
+        }
 
         setLoading(false);
       } catch (error) {
@@ -102,7 +117,10 @@ function ReadJoy() {
           <p>HOPINFO는 서로의 아픔을 공감하고 위로하는 커뮤니티입니다.</p>
           <p>회원들끼리 서로 존중하고, 응원과 조언을 아끼지 않는 자랑스러운 회원이 되도록 합시다.</p>
         </div>
-        <div className="ReadContent">{content}</div>
+        <div className="ReadContent">
+          <p>{content}</p>
+          {imageSrc && <img src={imageSrc} alt="Post" />}
+        </div>
         <div className="commontLogo">
           <img src={community} alt="커뮤니티 로고" width={27} height={26} />
           <div>댓글</div>
