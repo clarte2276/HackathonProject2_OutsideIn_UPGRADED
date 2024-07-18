@@ -18,7 +18,7 @@ const pool = mysql.createPool({
 // 게시판 데이터
 const getBoardData = (boardType, res) => {
   pool.query(
-    `SELECT no, title, nickname, content, DATE_FORMAT(created_date, '%Y년 %m월 %d일 %H시 %i분') AS created_date FROM community WHERE board_type = ?`,
+    `SELECT no, title, nickname, content, DATE_FORMAT(created_date, '%Y년 %m월 %d일 %H시 %i분') AS created_date FROM community WHERE board_type = ? ORDER BY created_date DESC`,
     [boardType],
     (error, results) => {
       if (error) {
@@ -66,7 +66,7 @@ const getPostDetails = (boardType, postId, req, res) => {
       return;
     }
 
-    const postQuery = `SELECT *, DATE_FORMAT(created_date, '%Y년 %m월 %d일 %H시 %i분') AS created_date FROM community WHERE no = ? AND board_type = ?`;
+    const postQuery = `SELECT *, DATE_FORMAT(created_date, '%Y년 %m월 %d일 %H시 %i분') AS created_date FROM community WHERE no = ? AND board_type = ? ORDER BY created_date DESC`;
     conn.query(postQuery, [postId, boardType], (err, postResult) => {
       if (err) {
         console.error('게시글 조회 오류:', err);
@@ -155,7 +155,7 @@ const getUpdateForm = (postId, boardType, req, res) => {
 // 댓글 가져오기
 const getComments = (boardNo, boardType, res) => {
   pool.query(
-    `SELECT *, DATE_FORMAT(created_date, '%Y년 %m월 %d일 %H시 %i분') AS created_date FROM comments WHERE board_no = ? AND board_type = ? ORDER BY created_date DESC`,
+    `SELECT *, DATE_FORMAT(created_date, '%Y년 %m월 %d일 %H시 %i분') AS created_date FROM comments WHERE board_no = ? AND board_type = ? ORDER BY created_date ASC`,
     [boardNo, boardType],
     (error, results) => {
       if (error) {
