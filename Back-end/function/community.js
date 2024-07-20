@@ -1,8 +1,8 @@
-//커뮤니티 게시판
 const express = require('express');
 const mysql = require('mysql');
 const db_config = require('../config/db_config.json');
 const moment = require('moment');
+const multer = require("multer");
 const router = express.Router();
 
 const pool = mysql.createPool({
@@ -15,10 +15,17 @@ const pool = mysql.createPool({
   debug: false,
 });
 
+// multer 설정
+const storage = multer.memoryStorage();
+const upload = multer({
+  storage: storage,
+  limits: { fileSize: 20 * 1024 * 1024 },
+}); // 파일 사이즈 제한 20MB
+
 // 게시판 데이터
 const getBoardData = (boardType, res) => {
   pool.query(
-    `SELECT no, title, nickname, content, DATE_FORMAT(created_date, '%Y년 %m월 %d일 %H시 %i분') AS created_date FROM community WHERE board_type = ?`,
+    `SELECT no, title, nickname, content, DATE_FORMAT(created_date, '%Y년 %m월 %d일 %H시 %i분') AS created_date FROM community WHERE board_type = ? ORDER BY created_date DESC`,
     [boardType],
     (error, results) => {
       if (error) {
@@ -35,7 +42,7 @@ const getBoardData = (boardType, res) => {
   );
 };
 
-const insertBoardData = (boardType, title, nickname, content, createdDate, res, redirectUrl) => {
+const insertBoardData = (boardType, title, nickname, content, createdDate, fileData, res) => {
   pool.getConnection((err, conn) => {
     if (err) {
       console.log('MySQL Connection Error', err);
@@ -43,8 +50,8 @@ const insertBoardData = (boardType, title, nickname, content, createdDate, res, 
     }
 
     conn.query(
-      `INSERT INTO community (board_type, title, nickname, content, created_date) VALUES (?, ?, ?, ?, ?)`,
-      [boardType, title, nickname, content, createdDate],
+      `INSERT INTO community (board_type, title, nickname, content, created_date, file_data) VALUES (?, ?, ?, ?, ?, ?)`,
+      [boardType, title, nickname, content, createdDate, fileData],
       (err, result) => {
         conn.release();
         if (err) {
@@ -66,7 +73,7 @@ const getPostDetails = (boardType, postId, req, res) => {
       return;
     }
 
-    const postQuery = `SELECT *, DATE_FORMAT(created_date, '%Y년 %m월 %d일 %H시 %i분') AS created_date FROM community WHERE no = ? AND board_type = ?`;
+    const postQuery = `SELECT *, DATE_FORMAT(created_date, '%Y년 %m월 %d일 %H시 %i분') AS created_date FROM community WHERE no = ? AND board_type = ? ORDER BY created_date DESC`;
     conn.query(postQuery, [postId, boardType], (err, postResult) => {
       if (err) {
         console.error('게시글 조회 오류:', err);
@@ -75,20 +82,30 @@ const getPostDetails = (boardType, postId, req, res) => {
         return;
       }
 
-      const commentQuery = `SELECT *, DATE_FORMAT(created_date, '%Y년 %m월 %d일 %H시 %i분') AS created_date FROM comments WHERE board_no = ? AND board_type = ?`;
-      conn.query(commentQuery, [postId, boardType], (err, commentResult) => {
-        conn.release();
-        if (err) {
-          console.error('댓글 조회 오류:', err);
-          res.status(500).send('서버 오류');
-          return;
+      if (postResult.length > 0) {
+        let post = postResult[0];
+        if (post.file_data) {
+          post.file_data = post.file_data.toString('base64'); // Base64 인코딩
         }
-        res.json({
-          post: postResult[0],
-          comments: commentResult,
-          session: req.session,
+
+        const commentQuery = `SELECT *, DATE_FORMAT(created_date, '%Y년 %m월 %d일 %H시 %i분') AS created_date FROM comments WHERE board_no = ? AND board_type = ?`;
+        conn.query(commentQuery, [postId, boardType], (err, commentResult) => {
+          conn.release();
+          if (err) {
+            console.error('댓글 조회 오류:', err);
+            res.status(500).send('서버 오류');
+            return;
+          }
+          res.json({
+            post: post,
+            comments: commentResult,
+            session: req.session,
+          });
         });
-      });
+      } else {
+        conn.release();
+        res.status(404).send('게시물을 찾을 수 없습니다.');
+      }
     });
   });
 };
@@ -155,7 +172,7 @@ const getUpdateForm = (postId, boardType, req, res) => {
 // 댓글 가져오기
 const getComments = (boardNo, boardType, res) => {
   pool.query(
-    `SELECT *, DATE_FORMAT(created_date, '%Y년 %m월 %d일 %H시 %i분') AS created_date FROM comments WHERE board_no = ? AND board_type = ? ORDER BY created_date DESC`,
+    `SELECT *, DATE_FORMAT(created_date, '%Y년 %m월 %d일 %H시 %i분') AS created_date FROM comments WHERE board_no = ? AND board_type = ? ORDER BY created_date ASC`,
     [boardNo, boardType],
     (error, results) => {
       if (error) {
@@ -186,6 +203,34 @@ const insertComment = (boardNo, boardType, nickname, content, res) => {
   );
 };
 
+// 이미지 파일 서빙
+router.get("/community/image/:id", (req, res) => {
+  const id = req.params.id;
+  pool.getConnection((err, conn) => {
+    if (err) {
+      console.error("MySQL 연결 오류:", err);
+      res.status(500).send("서버 오류");
+      return;
+    }
+
+    const query = `SELECT file_data FROM community WHERE no = ?`;
+    conn.query(query, [id], (err, result) => {
+      conn.release();
+      if (err) {
+        console.error("이미지 조회 오류:", err);
+        res.status(500).send("서버 오류");
+        return;
+      }
+      if (result.length === 0 || !result[0].file_data) {
+        res.status(404).send("이미지를 찾을 수 없습니다.");
+      } else {
+        res.writeHead(200, { "Content-Type": "image/jpeg" });
+        res.end(result[0].file_data);
+      }
+    });
+  });
+});
+
 // 게시판 타입
 const boards = ['joy', 'sadness', 'fear', 'anxiety'];
 boards.forEach((board) => {
@@ -197,11 +242,12 @@ boards.forEach((board) => {
 
   // 새 글 작성하는 링크는 localhost:3000/{보드이름}/new_Post 로 만들어주세요.
   // 새 글 작성
-  router.post(`/:board/process/new_Post`, (req, res) => {
+  router.post(`/:board/process/new_Post`, upload.single('file'), (req, res) => {
     const { title, content } = req.body;
     const nickname = req.session.user.nickname;
     const createdDate = moment().format('YYYY-MM-DD HH:mm:ss');
-    insertBoardData(req.params.board, title, nickname, content, createdDate, res, `/${board}`);
+    const fileData = req.file ? req.file.buffer : null;
+    insertBoardData(req.params.board, title, nickname, content, createdDate, fileData, res);
   });
 
   // 상세보기
@@ -223,12 +269,15 @@ boards.forEach((board) => {
   });
 
   // 게시글 수정
-  router.post('/:board/PostView/:no/process/update/', (req, res) => {
+  router.post('/:board/PostView/:no/process/update/', upload.single('file'), (req, res) => {
     const { title, content, created_date } = req.body;
     const date = moment(created_date || new Date()).format('YYYY-MM-DD HH:mm:ss');
+    const fileData = req.file ? req.file.buffer : null;
+
+    // 기존 파일 데이터를 유지하거나 새로운 파일 데이터로 업데이트
     pool.query(
-      `UPDATE community SET title = ?, content = ?, created_date = ? WHERE no = ? AND board_type = ?`,
-      [title, content, date, req.params.no, req.params.board],
+      `UPDATE community SET title = ?, content = ?, created_date = ?, file_data = IFNULL(?, file_data) WHERE no = ? AND board_type = ?`,
+      [title, content, date, fileData, req.params.no, req.params.board],
       (error) => {
         if (error) {
           console.error('쿼리 실행 중 오류 발생: ', error);

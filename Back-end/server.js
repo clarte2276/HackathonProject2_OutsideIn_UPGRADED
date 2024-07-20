@@ -40,7 +40,9 @@ app.use(
     store: sessionStore,
     resave: false,
     saveUninitialized: false,
-    cookie: { maxAge: 24 * 60 * 60 * 1000 }, // 24시간
+    cookie: { 
+      maxAge: 24 * 60 * 60 * 1000
+    }, 
   })
 );
 
@@ -57,6 +59,7 @@ const chatsRoutes = require('./function/chats');
 const commentsRoutes = require('./function/comments');
 const kakaoRoutes = require('./function/kakao_login');
 const noticeRoutes = require('./function/com_notice');
+const searchRoutes = require("./function/search");
 
 app.use('/', mypageRoutes);
 app.use('/', loginRoutes);
@@ -66,6 +69,7 @@ app.use('/', chatsRoutes);
 app.use('/', commentsRoutes);
 app.use('/', kakaoRoutes);
 app.use('/', noticeRoutes);
+app.use('/', searchRoutes);
 
 //모든 요청은 build/index.html로
 app.get('*', (req, res) => {

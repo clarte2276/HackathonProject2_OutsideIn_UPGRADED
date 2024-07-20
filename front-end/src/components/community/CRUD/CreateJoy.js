@@ -13,6 +13,7 @@ function CreateJoy() {
     title: '',
     body: '',
   });
+  const [file, setFile] = useState(null);
 
   const { title, body } = board;
 
@@ -24,22 +25,30 @@ function CreateJoy() {
     });
   };
 
+  const onFileChange = (event) => {
+    setFile(event.target.files[0]);
+  };
+
   const saveBoard = async (event) => {
     event.preventDefault();
-    const newPost = {
-      no: nextNo,
-      title,
-      content: body,
-      created_date: new Date().toISOString(),
-      board_type: 'joy',
-    };
+
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('title', title);
+    formData.append('content', body);
+    formData.append('created_date', new Date().toISOString());
+    formData.append('board_type', 'joy');
 
     try {
-      const response = await axios.post(`/joy/process/new_Post`, newPost, { withCredentials: true });
+      const response = await axios.post(`/joy/process/new_Post`, formData, {
+        withCredentials: true,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
       const newPostId = response.data.no;
-      console.log('왜안돼', { newPostId }, { newPost }, response.data);
       alert('등록되었습니다.');
-      navigate(`/joy/PostView/${newPostId}`, { state: { newPost } });
+      navigate(`/joy/PostView/${newPostId}`, { state: { newPost: response.data } });
     } catch (error) {
       console.error('Error saving post:', error);
       alert('글을 저장하는 도중 오류가 발생했습니다.');
@@ -85,6 +94,15 @@ function CreateJoy() {
                 value={body}
                 onChange={onChange}
               ></textarea>
+            </div>
+          </div>
+          <br />
+          <div className="titleBody_layout">
+            <div>
+              <p>
+                <span className="titleBody_name">사진 업로드</span>
+              </p>
+              <input className="imgUp" type="file" onChange={onFileChange} />
             </div>
           </div>
           <br />
